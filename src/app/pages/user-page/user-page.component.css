@@ -1,0 +1,28 @@
+.user-container {
+  padding: 20px;
+}
+
+.user-container h2 {
+  margin-bottom: 20px;
+}
+
+.user-container p {
+  margin: 5px 0;
+}
+
+.timeslot-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.timeslot-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  background-color: #323232;
+}
+
+.timeslot-item p {
+  margin: 5px 0;
+}

@@ -1,0 +1,26 @@
+<div *ngIf="userData">
+  <h1>Дані користувача:</h1>
+  <p><strong>Ім'я:</strong> {{ userData.FirstName }} {{ userData.LastName }}</p>
+  <p><strong>Роль:</strong> {{ userData.Role }}</p>
+  <p><strong>Email:</strong> {{ userData.Email }}</p>
+  <p><strong>Опис:</strong> {{ userData.Description }}</p>
+  <p><strong>Теги:</strong> {{ userData.Tags }}</p>
+</div>
+
+<div *ngIf="!userData">
+  <p>Немає даних користувача.</p>
+</div>
+
+<div class="user-container">
+  <h2>Time Slots</h2>
+  <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
+    <li *ngFor="let slot of timeSlots" class="timeslot-item">
+      <p><strong>Start Time:</strong> {{ slot.startTime || 'N/A'}}</p>
+      <p><strong>End Time:</strong> {{ slot.endTime || 'N/A'}}</p>
+      <p><strong>Is Available:</strong> {{ slot.isAvailable ? 'Yes' : 'No' }}</p>
+    </li>
+  </ul>
+  <div *ngIf="timeSlots.length === 0">
+    <p>No time slots available.</p>
+  </div>
+</div>

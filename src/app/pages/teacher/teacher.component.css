@@ -1,0 +1,80 @@
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+p {
+  margin: 5px 0;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.teacher {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.teacher h3 {
+  margin-top: 0;
+}
+
+.teacher p {
+  margin: 10px 0;
+}
+
+.teacher-container {
+  padding: 20px;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  padding: 10px;
+  font-size: 16px;
+  width: 300px;
+  margin-right: 10px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}
+
+.teacher-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.teacher-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  background-color: #323232;
+}
+
+.teacher-item p {
+  margin: 5px 0;
+}

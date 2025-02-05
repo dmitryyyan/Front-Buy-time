@@ -1,0 +1,22 @@
+<div class="add-timeslot-container">
+  <h2>Add Time Slot</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="teacherId">Teacher ID:</label>
+      <input type="text" id="teacherId" [(ngModel)]="timeSlotData.teacherId" name="teacherId" required>
+    </div>
+    <div class="form-group">
+      <label for="startTime">Start Time:</label>
+      <input type="datetime-local" id="startTime" [(ngModel)]="timeSlotData.startTime" name="startTime" required>
+    </div>
+    <div class="form-group">
+      <label for="endTime">End Time:</label>
+      <input type="datetime-local" id="endTime" [(ngModel)]="timeSlotData.endTime" name="endTime" required>
+    </div>
+    <div class="form-group">
+      <label for="isAvailable">Is Available:</label>
+      <input type="checkbox" id="isAvailable" [(ngModel)]="timeSlotData.isAvailable" name="isAvailable">
+    </div>
+    <button type="submit" class="submit-button">Add Time Slot</button>
+  </form>
+</div>

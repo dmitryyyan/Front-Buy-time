@@ -1,0 +1,19 @@
+<div class="bookings-container">
+  <h1>Bookings</h1>
+  <table class="bookings-table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Message</th>
+        <th>CreatedAt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let booking of bookings">
+        <td>{{ booking.status }}</td>
+        <td>{{ booking.message }}</td>
+        <td>{{ booking.createdAt }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

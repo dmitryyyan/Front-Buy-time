@@ -1,0 +1,15 @@
+<!-- filepath: /src/app/send-message/send-message.component.html -->
+<div>
+    <h2>Send Telegram Message</h2>
+    <form (ngSubmit)="sendMessage()">
+      <div>
+        <label for="chatId">Chat ID:</label>
+        <input type="text" id="chatId" [(ngModel)]="chatId" name="chatId" required>
+      </div>
+      <div>
+        <label for="message">Message:</label>
+        <textarea id="message" [(ngModel)]="message" name="message" required></textarea>
+      </div>
+      <button type="submit">Send</button>
+    </form>
+  </div>

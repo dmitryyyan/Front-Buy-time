@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+      {
+        "name": "BuyTimeConnection",
+        "driver": "MySQL",
+        "server": "176.121.15.81",
+        "port": 1435,
+        "database": "buytime",
+        "username": "buy5time1_usrprod",
+        "password": "Fj@7!bnf%0rr",
+        "ssl": {
+          "rejectUnauthorized": false
+        }
+      }
+    ]
+  }
+  
