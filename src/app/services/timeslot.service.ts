@@ -20,8 +20,13 @@ export class TimeslotService {
     return this.http.get<any>(`${this.apiUrl}/get-by-id?id=${id}`);
   }
 
-  getTimeSlotsByTeacherId(teacherId: string): Observable<any[]> {
-    console.log(`Fetching time slots for teacher id: ${teacherId}`);
-    return this.http.get<any[]>(`${this.apiUrl}/get-by-id?id=${teacherId}`);
+  getTimeSlotsByTeacherId(userId: string): Observable<any[]> {
+    console.log(`Fetching time slots for teacher id: ${userId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/get-by-id?id=${userId}`);
+  }
+
+
+  createBook(timeSlotData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/create`, timeSlotData);
   }
 }

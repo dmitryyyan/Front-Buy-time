@@ -17,11 +17,11 @@ export class NewPageComponent {
   }
 
   button2Action() {
-    this.router.navigate(['/bookings']);
+    this.router.navigate(['/add-timeslot']);
   }
 
   button3Action() {
-     this.router.navigate(['/registration']);
+     this.router.navigate(['/bookings']);
   }
 
   navigateToUserPage() {

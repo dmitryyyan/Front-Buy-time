@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Додайте ReactiveFormsModule
 import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -6,13 +7,16 @@ import { UserDataService } from './user-data.service';
 import { TimeslotService } from '../../services/timeslot.service';
 
 interface UserData {
-  Id: string; // Ensure the Id property is included
-  FirstName: string;
-  LastName: string;
-  Role: string;
-  Email: string;
-  Description: string;
-  Tags: string;
+  id: string; // Ensure the Id property is included
+  firstName: string;
+  lastName: string;
+  email: string;
+  telegramChatId: string;
+  isTeacher: boolean;
+  teacherNickname: string;
+  description: string;
+  rating: number;
+  tags: string;
   message?: string;
 }
 
@@ -21,12 +25,12 @@ interface TimeSlot {
   startTime: string;
   endTime: string;
   isAvailable: boolean;
-  TeacherId: string; // Ensure the TeacherId property is included
+  userId: string; // Ensure the TeacherId property is included
 }
 
 @Component({
   selector: 'app-user-page',
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule], // Додайте ReactiveFormsModule
   templateUrl: './user-page.component.html',
   styleUrls: ['./user-page.component.css']
 })
@@ -34,26 +38,59 @@ export class UserPageComponent implements OnInit {
   userData: UserData | null = null;
   timeSlots: TimeSlot[] = [];
   test = '';
+  chatId: string | null = null;
+  userForm: FormGroup;
+  isSubmitting: boolean = false;
+
   constructor(
     private userDataService: UserDataService,
     private http: HttpClient,
-    private timeslotService: TimeslotService
-  ) { }
+    private timeslotService: TimeslotService,
+    private fb: FormBuilder
+  ) {
+    this.userForm = this.fb.group({
+      isTeacher: [false, Validators.required]
+    });
+
+    this.userForm.get('isTeacher')?.valueChanges.subscribe((value) => {
+      if (this.userData && value !== this.userData.isTeacher && !this.isSubmitting) {
+        this.submitUser();
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.fetchUserData();
+    this.fetchChatId();
+  }
+
+  fetchChatId(): void {
+    this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
+      (response) => {
+        this.chatId = response.chatId;
+        console.log('Chat ID:', this.chatId); // Вивід chatId в консоль
+        this.fetchUserData();
+      },
+      (error) => {
+        console.error('Error fetching chat ID', error);
+      }
+    );
   }
 
   fetchUserData(): void {
-    this.http.get<UserData>('http://localhost:3000/api/getCurrentUserData').subscribe(
+    if (!this.chatId) {
+      console.error('Chat ID is not defined');
+      return;
+    }
+    this.http.get<UserData>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`).subscribe(
       (data) => {
         console.log('Fetched user data:', data); // Log the fetched data
         if (data && !data.message) {
           this.userData = data; // Зберігаємо отримані дані користувача
+          this.userForm.patchValue({ isTeacher: data.isTeacher }, { emitEvent: false }); // Set the checkbox value without emitting event
           console.log('User Data:', data); // Log the entire user data
-          if (data.Id) {
-            console.log('User ID:', data.Id); // Log the user ID
-            this.fetchTimeSlotsByTeacherId(data.Id); // Викликати метод тут з потрібним userId
+          if (data.id) {
+            console.log('User ID:', data.id); // Log the user ID
+            this.fetchTimeSlotsByTeacherId(data.id); // Викликати метод тут з потрібним userId
           } else {
             console.error('User ID is undefined');
           }
@@ -72,17 +109,36 @@ export class UserPageComponent implements OnInit {
       (data) => {
         console.log('Fetched all time slots:', data); // Log all fetched data
         console.log(userId); // Log the user ID
-        for (let slot of data) {
-          console.log('Teacher ID:', slot.teacherId); // Log the TeacherId of each time slot
-          if (slot.teacherId.toLowerCase() === userId.toLowerCase()) {
-            console.log('Matching time slot row:', slot.id); // Log the entire row if there is a match
-            this.timeSlots.push(slot); // Зберегти відповідні таймслоти
-          }
-        }
+        this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase()); // Filter and store matching timeslots
       },
       (error) => {
         console.error('Error fetching time slots', error);
       }
     );
+  }
+
+  submitUser(): void {
+    if (this.userForm.valid && this.userData) {
+      this.isSubmitting = true;
+      const userId = this.userData.id;
+      const isTeacher = this.userForm.get('isTeacher')?.value;
+
+      console.log('Toggling isTeacher status for user:', userId, 'to:', isTeacher);
+
+      this.http.put(`http://localhost:5258/api/user/toggle-is-teacher?userId=${userId}`, { isTeacher }).subscribe(response => {
+        console.log('User isTeacher status updated successfully', response);
+        this.fetchUserData(); // Refresh user data after updating the role
+        this.fetchTimeSlotsByTeacherId(userId); // Refresh timeslots after updating the role
+        alert(`Ви тепер ${isTeacher ? 'викладач' : 'студент'}`); // Show message box
+        this.isSubmitting = false;
+      }, error => {
+        console.error('Error updating user isTeacher status', error);
+        this.isSubmitting = false;
+      });
+    }
+  }
+
+  getLionEmojis(rating: number): string {
+    return '🦁'.repeat(rating);
   }
 }

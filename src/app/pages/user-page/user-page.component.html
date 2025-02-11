@@ -1,10 +1,15 @@
 <div *ngIf="userData">
   <h1>Дані користувача:</h1>
-  <p><strong>Ім'я:</strong> {{ userData.FirstName }} {{ userData.LastName }}</p>
-  <p><strong>Роль:</strong> {{ userData.Role }}</p>
-  <p><strong>Email:</strong> {{ userData.Email }}</p>
-  <p><strong>Опис:</strong> {{ userData.Description }}</p>
-  <p><strong>Теги:</strong> {{ userData.Tags }}</p>
+  <p><strong>Ім'я:</strong> {{ userData.firstName }} {{ userData.lastName }}</p>
+  <p><strong>Email:</strong> {{ userData.email }}</p>
+  <p><strong>Нікнейм:</strong> {{ userData.teacherNickname }}</p>
+  <p><strong>Опис:</strong> {{ userData.description }}</p>
+  <p><strong>Теги:</strong> {{ userData.tags }}</p>
+  <p *ngIf="userData.isTeacher">
+    <strong>Рейтинг:</strong>
+    <span [innerHTML]="getLionEmojis(userData.rating)"></span>
+  </p>
+  <p><strong>Вчитель?:</strong> {{ userData.isTeacher ? 'Так' : 'Ні' }}</p>
 </div>
 
 <div *ngIf="!userData">
@@ -24,3 +29,12 @@
     <p>No time slots available.</p>
   </div>
 </div>
+
+<form [formGroup]="userForm">
+  <!-- ...інші елементи форми... -->
+  <div>
+    <label>
+      <input type="checkbox" formControlName="isTeacher" (change)="submitUser()" /> Ви викладач?
+    </label>
+  </div>
+</form>

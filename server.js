@@ -8,21 +8,12 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const config = {
-  user: 'buy5time1_usrprod',
-  password: 'Fj@7!bnf%0rr',
-  server: '176.121.15.81',
-  database: 'buytime',
-  port: 1435,
-  options: {
-    encrypt: false,
-    trustServerCertificate: true,
-  }
-};
+
 
 const bot = new TelegramBot('7551270818:AAFcpELcLOyg5R9gjZ4SGIEqqwRJXbJl3Y0', { polling: true });
 
 let currentUserData = {}; // Глобальний об'єкт для зберігання даних поточного користувача
+let currentChatId = null; // Variable to store the current chatId
 
 // Обробка команди /start
 bot.onText(/\/start/, (msg) => {
@@ -37,65 +28,21 @@ bot.onText(/\/start/, (msg) => {
 // Обробка повідомлень для отримання даних користувача
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id.toString(); // Перетворюємо chatId на рядок
+  currentChatId = chatId; // Store the current chatId
   console.log(`Received message from chatId: ${chatId}`);
 
-  try {
-    const pool = await sql.connect(config);
-    const query = `
-      SELECT Id, FirstName, LastName, Role, Email, Description, Tags
-      FROM Users
-      WHERE TelegramChatId = @TelegramChatId
-    `;
-
-    const result = await pool.request()
-      .input('TelegramChatId', sql.NVarChar, chatId)
-      .query(query);
-
-    if (result.recordset.length > 0) {
-      currentUserData = result.recordset[0]; // Зберігаємо дані поточного користувача
-      bot.sendMessage(chatId, `Hello ${currentUserData.Id}${currentUserData.FirstName} ${currentUserData.LastName}, here are your details:\nRole: ${currentUserData.Role}\nEmail: ${currentUserData.Email}\nDescription: ${currentUserData.Description}\nTags: ${currentUserData.Tags}`);
-    } else {
-      bot.sendMessage(chatId, 'User not found');
-    }
-  } catch (err) {
-    console.error('Database error:', err);
-    bot.sendMessage(chatId, 'Error fetching your data.');
-  }
+ 
 });
 
-// GET запит для отримання даних поточного користувача
-app.get('/api/getCurrentUserData', (req, res) => {
-  if (Object.keys(currentUserData).length > 0) {
-    res.status(200).json(currentUserData);
+
+
+
+// GET запит для отримання поточного chatId
+app.get('/api/getCurrentChatId', (req, res) => {
+  if (currentChatId) {
+    res.status(200).json({ chatId: currentChatId });
   } else {
-    res.status(404).json({ message: 'No user data available' });
-  }
-});
-
-// GET запит для отримання даних користувача за chatId
-app.get('/api/getUserData/:chatId', async (req, res) => {
-  const { chatId } = req.params;
-
-  try {
-    const pool = await sql.connect(config);
-    const query = `
-      SELECT FirstName, LastName, Role, Email, Description, Tags
-      FROM Users
-      WHERE TelegramChatId = @TelegramChatId
-    `;
-
-    const result = await pool.request()
-      .input('TelegramChatId', sql.NVarChar, chatId)
-      .query(query);
-
-    if (result.recordset.length > 0) {
-      res.status(200).json(result.recordset[0]);
-    } else {
-      res.status(404).json({ message: 'User not found' });
-    }
-  } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: err.message });
+    res.status(404).json({ message: 'No chat ID available' });
   }
 });
 

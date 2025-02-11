@@ -1,0 +1,18 @@
+<p>createbook works!</p>
+<form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
+  <label for="teacher">Select Teacher:</label>
+  <select id="teacher" formControlName="teacherId" (change)="onTeacherChange($event)">
+    <option *ngFor="let teacher of teachers" [value]="teacher.id">{{ teacher.firstName }} {{ teacher.lastName }}</option>
+  </select>
+
+  <label for="timeslot">Select Timeslot:</label>
+  <select id="timeslot" formControlName="timeslotId">
+    <option *ngFor="let timeslot of timeslots" [value]="timeslot.id">{{ timeslot.id }}</option>
+  </select>
+
+  <label for="message">Message:</label>
+  <textarea id="message" formControlName="message"></textarea>
+
+
+  <button type="submit" [disabled]="!bookingForm.valid">Book</button>
+</form>

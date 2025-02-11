@@ -6,13 +6,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
 
 interface UserData {
-  Id: string; // Ensure the Id property is included
-  FirstName: string;
-  LastName: string;
-  Role: string;
-  Email: string;
-  Description: string;
-  Tags: string;
+  id: string; // Ensure the Id property is included
+  firstName: string;
+  lastName: string;
+  role: string;
+  email: string;
+  description: string;
+  tags: string;
   message?: string;
 }
 interface BookingSlot {
@@ -20,7 +20,7 @@ interface BookingSlot {
   status: string;
   message: string;
   createdAt: boolean;
-  TeacherId: string; // Ensure the TeacherId property is included
+  userId: string; // Ensure the TeacherId property is included
 }
 @Component({
   selector: 'app-bookings',
@@ -32,6 +32,7 @@ interface BookingSlot {
 export class BookingsComponent implements OnInit {
   bookings: BookingSlot[] = [];
   userData: UserData | null = null;
+  chatId: string | null = null;
 
   constructor(
     private bookingsService: BookingsService,
@@ -40,27 +41,36 @@ export class BookingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    /*this.bookingsService.getAllBookings().subscribe(
-      data => {
-        this.bookings = data;
-        console.log('Fetched bookings:', data);
-      },
-      error => console.error('Error fetching bookings:', error)
-    );*/
+    this.fetchChatId();
+  }
 
-    this.fetchUserData();
+  fetchChatId(): void {
+    this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
+      (response) => {
+        this.chatId = response.chatId;
+        console.log('Chat ID:', this.chatId); // Вивід chatId в консоль
+        this.fetchUserData();
+      },
+      (error) => {
+        console.error('Error fetching chat ID', error);
+      }
+    );
   }
 
   fetchUserData(): void {
-    this.http.get<UserData>('http://localhost:3000/api/getCurrentUserData').subscribe(
+    if (!this.chatId) {
+      console.error('Chat ID is not defined');
+      return;
+    }
+    this.http.get<UserData>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`).subscribe(
       (data) => {
         console.log('Fetched user data:', data); // Log the fetched data
         if (data && !data.message) {
           this.userData = data; // Зберігаємо отримані дані користувача
           console.log('User Data:', data); // Log the entire user data
-          if (data.Id) {
-            console.log('User ID:', data.Id); // Log the user ID
-            this.fetchBookSlotsById(data.Id); // Викликати метод тут з потрібним userId
+          if (data.id) {
+            console.log('User ID:', data.id); // Log the user ID
+            this.fetchBookSlotsById(data.id); // Викликати метод тут з потрібним userId
           } else {
             console.error('User ID is undefined');
           }
@@ -80,8 +90,8 @@ export class BookingsComponent implements OnInit {
         console.log('Fetched all time slots:', data); // Log all fetched data
         console.log(userId); // Log the user ID
         for (let slot of data) {
-          console.log('Teacher ID:', slot.teacherId); // Log the TeacherId of each time slot
-          if (slot.teacherId.toLowerCase() === userId.toLowerCase()) {
+          console.log('Teacher ID:', slot.userId); // Log the TeacherId of each time slot
+          if (slot.userId.toLowerCase() === userId.toLowerCase()) {
             console.log('Matching time slot row:', slot.id);
             console.log('good'); // Log the entire row if there is a match
             this.bookings.push(slot); // Зберегти відповідні таймслоти
