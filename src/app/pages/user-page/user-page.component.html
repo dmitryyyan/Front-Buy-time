@@ -1,40 +1,52 @@
-<div *ngIf="userData">
-  <h1>Дані користувача:</h1>
-  <p><strong>Ім'я:</strong> {{ userData.firstName }} {{ userData.lastName }}</p>
-  <p><strong>Email:</strong> {{ userData.email }}</p>
-  <p><strong>Нікнейм:</strong> {{ userData.teacherNickname }}</p>
-  <p><strong>Опис:</strong> {{ userData.description }}</p>
-  <p><strong>Теги:</strong> {{ userData.tags }}</p>
-  <p *ngIf="userData.isTeacher">
-    <strong>Рейтинг:</strong>
-    <span [innerHTML]="getLionEmojis(userData.rating)"></span>
-  </p>
-  <p><strong>Вчитель?:</strong> {{ userData.isTeacher ? 'Так' : 'Ні' }}</p>
-</div>
-
-<div *ngIf="!userData">
-  <p>Немає даних користувача.</p>
-</div>
-
-<div class="user-container">
-  <h2>Time Slots</h2>
-  <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
-    <li *ngFor="let slot of timeSlots" class="timeslot-item">
-      <p><strong>Start Time:</strong> {{ slot.startTime || 'N/A'}}</p>
-      <p><strong>End Time:</strong> {{ slot.endTime || 'N/A'}}</p>
-      <p><strong>Is Available:</strong> {{ slot.isAvailable ? 'Yes' : 'No' }}</p>
-    </li>
-  </ul>
-  <div *ngIf="timeSlots.length === 0">
-    <p>No time slots available.</p>
+<div class="page-container">
+  <div *ngIf="userData" class="user-data">
+    <h1>Дані користувача:</h1>
+    <p><strong>Ім'я:</strong> {{ userData.firstName }} {{ userData.lastName }}</p>
+    <p><strong>Email:</strong> {{ userData.email }}</p>
+    <p><strong>Нікнейм:</strong> {{ userData.teacherNickname }}</p>
+    <p><strong>Опис:</strong> {{ userData.description }}</p>
+    <p><strong>Теги:</strong> {{ userData.tags }}</p>
+    <p *ngIf="userData.isTeacher">
+      <strong>Рейтинг:</strong>
+      <span [innerHTML]="getLionEmojis(userData.rating)"></span>
+    </p>
+    <p><strong>Вчитель?:</strong> {{ userData.isTeacher ? 'Так' : 'Ні' }}</p>
   </div>
-</div>
 
-<form [formGroup]="userForm">
-  <!-- ...інші елементи форми... -->
-  <div>
-    <label>
-      <input type="checkbox" formControlName="isTeacher" (change)="submitUser()" /> Ви викладач?
-    </label>
+  <div *ngIf="!userData" class="no-user-data">
+    <p>Немає даних користувача.</p>
   </div>
-</form>
+
+  <form [formGroup]="userForm" class="glass-form">
+    <div>
+      <label>
+        <input type="checkbox" formControlName="isTeacher" (change)="submitUser()" /> Ви викладач?
+      </label>
+    </div>
+    <div class="button-group">
+      <button type="button" class="add-timeslot-button" (click)="navigateToAddTimeslotPage()">
+        <i class="fas fa-plus-circle"></i> Додати таймслот
+      </button>
+      <button type="button" class="view-timeslots-button" (click)="navigateToViewTimeslots()">
+        <i class="fas fa-calendar-alt"></i> Перегляд тайм слотів
+      </button>
+      <button type="button" class="view-bookings-button" (click)="navigateToViewBookings()">
+        <i class="fas fa-book"></i> Перегляд букінгів
+      </button>
+    </div>
+    <div class="button-container">
+      <button (click)="button1Action()">
+        <i class="fas fa-search"></i>🔍
+      </button>
+      <button (click)="button2Action()">
+        <i class="fas fa-info-circle"></i>📅
+      </button>
+      <button (click)="button3Action()">
+        <i class="fas fa-cog"></i> 📖
+      </button>
+      <button (click)="navigateToUserPage()">
+        <i class="fas fa-user"></i> 👤
+      </button>
+    </div>
+  </form>
+</div>

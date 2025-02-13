@@ -24,5 +24,21 @@
       </div>
     </div>
     <button mat-raised-button color="accent" type="submit" class="submit-button">Add Time Slot</button>
+    <div class="button-container">
+      <meta charset="UTF-8">
+      <button (click)="button1Action()">
+        <i class="fas fa-search"></i>🔍
+      </button>
+      <button (click)="button2Action()">
+        <i class="fas fa-info-circle"></i>📅 
+      </button>
+      <button (click)="button3Action()">
+        <i class="fas fa-cog"></i> 📖 
+      </button>
+      <button (click)="navigateToUserPage()">
+        <i class="fas fa-user"></i> 👤 
+      </button>
+    </div>
+  
   </form>
 </mat-card>

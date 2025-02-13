@@ -1,3 +1,37 @@
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 97%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a background color */
+}
+
+button {
+  flex: 1;
+  margin: 5px;
+  padding: 10px 0;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0; /* Remove border-radius to make buttons fit edge-to-edge */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+button i {
+  margin-right: 8px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
 .add-timeslot-container {
   padding: 20px;
   max-width: 600px;
@@ -30,7 +64,7 @@
 }
 
 .add-timeslot-container form input[type="text"],
-.add-timeslot-container form input[type="datetime-local"],
+.add-timeslot-container form input[type="date"],
 .add-timeslot-container form input[type="checkbox"] {
   padding: 12px;
   font-size: 14px;
@@ -66,14 +100,4 @@
 
 .add-timeslot-container .submit-button:hover {
   background-color: #0288d1; /* Darker blue on hover */
-}
-
-.add-timeslot-container mat-card-title {
-  margin-bottom: 25px;
-  text-align: center;
-  color: black; /* Black text */
-}
-
-.add-timeslot-container mat-form-field {
-  width: 100%;
 }

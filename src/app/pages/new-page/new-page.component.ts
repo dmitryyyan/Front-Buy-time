@@ -21,7 +21,7 @@ export class NewPageComponent {
   }
 
   button3Action() {
-     this.router.navigate(['/bookings']);
+     this.router.navigate(['/createbook']);
   }
 
   navigateToUserPage() {

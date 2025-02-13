@@ -44,6 +44,7 @@ export class TeacherService {
 
   getBookingsByTeacherId(teacherId: string): Observable<any[]> {
     console.log('Fetching bookings data from:', teacherId);
+    
     return this.http.get<any[]>(`${this.bokingSlotApiUrl}/get-all`).pipe(
       map(bookings => bookings.filter(booking => booking.userId === teacherId))
     );

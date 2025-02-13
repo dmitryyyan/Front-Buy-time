@@ -3,7 +3,7 @@ import { TeacherService } from '../../services/teacher.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { UserDataService } from '../user-page/user-data.service';
+import { UserDataService } from '../../services/user-data.service';
 import { Router } from '@angular/router';
 
 interface UserData {
@@ -31,6 +31,22 @@ export class TeacherComponent implements OnInit {
   searchName: string = '';
 
   constructor(private teacherService: TeacherService, private router: Router) { }
+
+  button1Action() {
+    this.router.navigate(['/teacher']);
+  }
+
+  button2Action() {
+    this.router.navigate(['/add-timeslot']);
+  }
+
+  button3Action() {
+     this.router.navigate(['/createbook']);
+  }
+
+  navigateToUserPage() {
+    this.router.navigate(['/user-page']);
+  }
 
   ngOnInit(): void {
     console.log('Fetching all teachers data', this.userData);

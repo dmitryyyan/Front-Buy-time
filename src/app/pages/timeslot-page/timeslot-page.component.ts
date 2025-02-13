@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Додайте ReactiveFormsModule
-import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Додайте ReactiveFormsModule
+import { Router } from '@angular/router';
 import { UserDataService } from '../../services/user-data.service';
 import { TimeslotService } from '../../services/timeslot.service';
-import { Router } from '@angular/router';
 
 interface UserData {
   id: string; // Ensure the Id property is included
@@ -30,15 +31,14 @@ interface TimeSlot {
 }
 
 @Component({
-  selector: 'app-user-page',
+  selector: 'app-timeslot-page',
   imports: [CommonModule, HttpClientModule, ReactiveFormsModule], // Додайте ReactiveFormsModule
-  templateUrl: './user-page.component.html',
-  styleUrls: ['./user-page.component.css']
+  templateUrl: './timeslot-page.component.html',
+  styleUrls: ['./timeslot-page.component.css']
 })
-export class UserPageComponent implements OnInit {
+export class TimeslotPageComponent implements OnInit {
   userData: UserData | null = null;
   timeSlots: TimeSlot[] = [];
-  test = '';
   chatId: string | null = null;
   userForm: FormGroup;
   isSubmitting: boolean = false;
@@ -59,22 +59,6 @@ export class UserPageComponent implements OnInit {
         this.submitUser();
       }
     });
-  }
-
-  button1Action() {
-    this.router.navigate(['/teacher']);
-  }
-
-  button2Action() {
-    this.router.navigate(['/add-timeslot']);
-  }
-
-  button3Action() {
-     this.router.navigate(['/createbook']);
-  }
-
-  navigateToUserPage() {
-    this.router.navigate(['/user-page']);
   }
 
   ngOnInit(): void {
@@ -158,17 +142,5 @@ export class UserPageComponent implements OnInit {
 
   getLionEmojis(rating: number): string {
     return '🦁'.repeat(rating);
-  }
-
-  navigateToAddTimeslotPage() {
-    this.router.navigate(['/add-timeslot']);
-  }
-
-  navigateToViewTimeslots() {
-    this.router.navigate(['/timeslot-page']);
-  }
-
-  navigateToViewBookings() {
-    this.router.navigate(['/view-bookings']);
   }
 }

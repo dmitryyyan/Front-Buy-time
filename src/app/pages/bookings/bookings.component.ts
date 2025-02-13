@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingsService } from '../../services/bookings.service';
 import { CommonModule } from '@angular/common';
-import { UserDataService } from '../../pages/user-page/user-data.service';
+import { UserDataService } from '../../services/user-data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
 

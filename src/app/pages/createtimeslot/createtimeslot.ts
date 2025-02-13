@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input'; // Import MatInputModu
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule
 import { MatCheckboxModule } from '@angular/material/checkbox'; // Import MatCheckboxModule
 import { MatCardModule } from '@angular/material/card'; // Import MatCardModule
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-timeslot',
@@ -22,8 +23,8 @@ import { MatCardModule } from '@angular/material/card'; // Import MatCardModule
     MatCheckboxModule,
     MatCardModule // Ensure MatCardModule is included
   ],
-  templateUrl: './add-timeslot.component.html',
-  styleUrls: ['./add-timeslot.component.css']
+  templateUrl: './createtimeslot.html',
+  styleUrls: ['./createtimeslot.css']
 })
 export class AddTimeslotComponent implements OnInit {
   chatId: string | null = null;
@@ -41,8 +42,27 @@ export class AddTimeslotComponent implements OnInit {
   constructor(
     private teacherService: TeacherService,
     private route: ActivatedRoute,
-    private http: HttpClient // Inject HttpClient
+    private http: HttpClient,
+    private router: Router// Inject HttpClient
   ) { }
+
+   
+  
+    button1Action() {
+      this.router.navigate(['/teacher']);
+    }
+  
+    button2Action() {
+      this.router.navigate(['/add-timeslot']);
+    }
+  
+    button3Action() {
+       this.router.navigate(['/createbook']);
+    }
+  
+    navigateToUserPage() {
+      this.router.navigate(['/user-page']);
+    }
 
   ngOnInit(): void {
     this.fetchChatId();

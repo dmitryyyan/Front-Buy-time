@@ -17,4 +17,20 @@
   <div *ngIf="teachers.length === 0">
     <p>Немає даних викладачів.</p>
   </div>
+
+  <div class="button-container">
+    <meta charset="UTF-8">
+    <button (click)="button1Action()">
+      <i class="fas fa-search"></i>🔍
+    </button>
+    <button (click)="button2Action()">
+      <i class="fas fa-info-circle"></i>📅 
+    </button>
+    <button (click)="button3Action()">
+      <i class="fas fa-cog"></i> 📖 
+    </button>
+    <button (click)="navigateToUserPage()">
+      <i class="fas fa-user"></i> 👤 
+    </button>
+  </div>
 </div>
