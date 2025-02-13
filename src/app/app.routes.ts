@@ -11,7 +11,7 @@ import { TeacherDetailsComponent } from './pages/teacher-details/teacher-details
 import { TimeslotPageComponent } from './pages/timeslot-page/timeslot-page.component';
 
 export const routes: Routes = [
-  { path: '', component: NewPageComponent, pathMatch: 'full' },
+  { path: '', component: TeacherComponent, pathMatch: 'full' },
   { path: 'user-page', component: UserPageComponent },
   { path: 'new-page', component: NewPageComponent },
   { path: 'teacher', component: TeacherComponent },

@@ -42,11 +42,16 @@ export class TeacherService {
     );
   }
 
-  getBookingsByTeacherId(teacherId: string): Observable<any[]> {
-    console.log('Fetching bookings data from:', teacherId);
+  getBookingsByTeacherId(timeslotIds: string): Observable<any[]> {
+    console.log('Fetching bookings data from:', timeslotIds);
     
     return this.http.get<any[]>(`${this.bokingSlotApiUrl}/get-all`).pipe(
-      map(bookings => bookings.filter(booking => booking.userId === teacherId))
+      map(bookings => bookings.filter(booking => {
+        const matches = booking.timeSlot === timeslotIds;
+        console.log(booking.timeSlot)
+       // console.log(`booking.timeslotId === timeslotIds:`, matches); // Log the result
+        return matches;
+      }))
     );
   }
 

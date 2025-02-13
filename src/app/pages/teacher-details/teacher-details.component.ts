@@ -34,19 +34,26 @@ export class TeacherDetailsComponent implements OnInit {
       (data) => {
         console.log('Fetched time slots:', data); // Log the fetched data
         this.timeSlots = data;
+        console.log('timeslots:', this.timeSlots);
+        
+        const timeslotIds = this.timeSlots.map(slot => {
+          console.log('slot.id:', slot.id); // Log slot.id
+          return slot.id;
+        });
+        console.log('timeslotIds:', timeslotIds);
+        this.teacherService.getBookingsByTeacherId(teacherId).subscribe( // Pass teacherId instead of timeslotIds
+          (data) => {
+            // Log the fetched data
+            this.bookings = data.filter(booking => timeslotIds.includes(booking.timeslotId));
+            console.log('Fetched bookings:', this.bookings); 
+          },
+          (error) => {
+            console.error('Error fetching bookings', error);
+          }
+        );
       },
       (error) => {
         console.error('Error fetching time slots', error);
-      }
-    );
-
-    this.teacherService.getBookingsByTeacherId(teacherId).subscribe(
-      (data) => {
-        console.log('Fetched bookings:', data); // Log the fetched data
-        this.bookings = data;
-      },
-      (error) => {
-        console.error('Error fetching bookings', error);
       }
     );
   }
