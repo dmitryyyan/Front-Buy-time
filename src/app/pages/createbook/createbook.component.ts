@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-createbook',
@@ -14,8 +16,10 @@ export class CreatebookComponent implements OnInit {
   bookingForm: FormGroup;
   teachers: any[] = [];
   timeslots: any[] = [];
+  userId: string = '';
+  message: string = ''; // Додати змінну для повідомлення
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.bookingForm = this.fb.group({
       teacherId: ['', Validators.required],
       timeslotId: ['', Validators.required],
@@ -24,8 +28,25 @@ export class CreatebookComponent implements OnInit {
     });
   }
 
+  button1Action() {
+    this.router.navigate(['/teacher']);
+  }
+
+  button2Action() {
+    this.router.navigate(['/add-timeslot']);
+  }
+
+  button3Action() {
+     this.router.navigate(['/createbook']);
+  }
+
+  navigateToUserPage() {
+    this.router.navigate(['/user-page']);
+  }
+
   ngOnInit(): void {
     this.loadTeachers();
+    this.fetchChatId();
   }
 
   loadTeachers(): void {
@@ -47,17 +68,45 @@ export class CreatebookComponent implements OnInit {
     });
   }
 
+  fetchChatId(): void {
+    this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
+      (response) => {
+        const chatId = response.chatId;
+        console.log('Chat ID:', chatId); // Вивід chatId в консоль
+        this.fetchUserData(chatId);
+      },
+      (error) => {
+        console.error('Error fetching chat ID', error);
+      }
+    );
+  }
+
+  fetchUserData(chatId: string): void {
+    this.http.get<any>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${chatId}`).subscribe(
+      (data) => {
+        console.log('Fetched user data:', data); // Log the fetched data
+        if (data && !data.message) {
+          this.userId = data.id; // Зберігаємо отриманий userId
+          console.log('User ID:', this.userId); // Log the user ID
+        } else {
+          console.log('No user data available');
+        }
+      },
+      (error) => {
+        console.error('Error fetching user data', error);
+      }
+    );
+  }
+
   onTeacherChange(event: any): void {
     const teacherId = event.target.value;
     this.loadTimeslots(teacherId);
   }
 
- 
-
   submitBooking(): void {
     if (this.bookingForm.valid) {
       const bookingData = {
-        userId: '231363D4-5AC6-4E9D-B0C8-54BC41053EF6', // Використовуйте статичний userId
+        userId: this.userId,
         timeslotId: this.bookingForm.get('timeslotId')?.value,
         status: this.bookingForm.get('status')?.value,
         message: this.bookingForm.get('message')?.value,
@@ -67,10 +116,13 @@ export class CreatebookComponent implements OnInit {
 
       this.http.post('http://localhost:5258/api/booking/create', bookingData).subscribe(response => {
         console.log('Booking successful', response);
+        this.message = 'Букінг успішно відправлений!'; // Встановити повідомлення про успіх
       }, error => {
         console.error('Booking failed', error);
-        console.error('Error response:', error); // Log the error response for debugging
+        console.error('Error response:', error); // Логувати помилку для налагодження
+        this.message = 'Помилка при відправленні букінгу.'; // Встановити повідомлення про помилку
       });
     }
   }
+
 }

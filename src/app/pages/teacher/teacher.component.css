@@ -1,97 +1,69 @@
-ul {
-  list-style-type: none;
+body, html {
+  height: 100%;
+  margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
 }
 
-li {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.teacher-container {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  position: relative;
+  padding: 5%;
+  border-radius: 0px;
+  margin: 0;
+  color: #fff;
+  padding-bottom: 50%;
 }
 
-p {
-  margin: 5px 0;
+.teacher-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../../../../lion.png') no-repeat center center fixed; /* Background image from the specified folder */
+  background-size: cover;
+  opacity: 0.2; /* Make the image semi-transparent */
+  z-index: -1; /* Place it behind the content */
 }
 
-h2 {
-  margin-bottom: 20px;
-}
-
-.teacher {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.teacher h3 {
-  margin-top: 0;
-}
-
-.teacher p {
-  margin: 10px 0;
-}
-
+/* Основний стиль */
 .teacher-container {
   padding: 20px;
 }
 
-.search-bar {
+.teacher-container h2 {
   margin-bottom: 20px;
+  font-size: 2em;
+  color: #fff;
 }
 
-.search-bar input {
-  padding: 10px;
-  font-size: 16px;
-  width: 300px;
-  margin-right: 10px;
-}
-
-.search-bar button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.search-bar button:hover {
-  background-color: #0056b3;
+.teacher-container p {
+  margin: 5px 0;
+  font-size: 1.2em;
 }
 
 .teacher-list {
   list-style-type: none;
   padding: 0;
-  padding-bottom: 10%;
 }
 
 .teacher-item {
   margin-bottom: 20px;
   padding: 10px;
-  border: 1px solid #3a3a3a;
+  border: 1px solid #4761d6;
   border-radius: 5px;
-  background-color: #323232;
+  background-color: #2376b2; /* Світло-синій, підходить для університетського стилю */
 }
 
 .teacher-item p {
   margin: 5px 0;
-}
-
-.light-blue-button {
-  background-color: lightblue;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 4px;
+  font-size: 1.1em;
 }
 
 .button-container {
@@ -102,22 +74,23 @@ h2 {
   left: 0;
   width: 97%;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a background color */
+  background-color: rgba(0, 0, 0, 0.5); /* Темне напівпрозоре фонове забарвлення */
 }
 
 button {
   flex: 1;
   margin: 5px;
   padding: 10px 0;
-  font-size: 16px;
-  background-color: #007bff;
+  font-size: 18px;
+  background-color: #00aaff; /* Акцентний колір, світло-блакитний */
   color: white;
   border: none;
-  border-radius: 0; /* Remove border-radius to make buttons fit edge-to-edge */
+  border-radius: 5px; /* Додаємо округлення кнопок */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкий тіньовий ефект */
 }
 
 button i {
@@ -125,5 +98,59 @@ button i {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #0088cc; /* Трохи темніший відтінок для hover */
 }
+
+.light-blue-button {
+  background-color: #39a2d6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 8px 16px; /* Adjust padding for smaller size */
+  font-size: 14px; /* Adjust font size for smaller size */
+}
+
+.light-blue-button:hover {
+  background-color: #0088cc; /* Slightly darker shade for hover */
+}
+
+@media (max-width: 768px) {
+  .teacher-container {
+    padding: 2%;
+    padding-bottom: 70%;
+  }
+
+  .teacher-container h2 {
+    font-size: 1.6em;
+  }
+
+  .teacher-container p {
+    font-size: 1em;
+  }
+
+  button {
+    font-size: 18px;
+    padding: 17px 0;
+  }
+
+  .light-blue-button {
+    padding: 10px 22px; /* Further adjust padding for smaller screens */
+    font-size: 12px; /* Further adjust font size for smaller screens */
+  }
+
+  .input-text {
+    width: 95%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #171616;
+    border-radius: 5px;
+    font-size: 1.1em;
+    background-color: rgb(186, 224, 253);
+  }
+}
+

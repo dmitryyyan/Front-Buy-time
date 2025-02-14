@@ -1,8 +1,11 @@
+<body>
+  
+
 <div class="teacher-container">
   <h2>All Teachers</h2>
   <div class="search-bar">
-    <input type="text" placeholder="Search by First and Last Name" [(ngModel)]="searchName">
-    <button (click)="searchTeachers()">Search</button>
+    <input class="input-text" type="text" placeholder="Search by First and Last Name" [(ngModel)]="searchName">
+    <button class="light-blue-button" (click)="searchTeachers()">Search</button>
   </div>
   <ul *ngIf="teachers.length > 0" class="teacher-list">
     <li *ngFor="let teacher of teachers" class="teacher-item">
@@ -34,3 +37,4 @@
     </button>
   </div>
 </div>
+</body>

@@ -1,32 +1,21 @@
-<p>timeslot-page works!</p>
-<div class="page-container">
 
-  
-    <div *ngIf="!userData" class="no-user-data">
-      <p>Немає даних користувача.</p>
-    </div>
-  
-    <div class="user-container">
-      <h2>Time Slots</h2>
-      <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
-        <li *ngFor="let slot of timeSlots" class="timeslot-item">
-          <p><strong>Start Time:</strong> {{ slot.startTime || 'N/A'}}</p>
-          <p><strong>End Time:</strong> {{ slot.endTime || 'N/A'}}</p>
-          <p><strong>Is Available:</strong> {{ slot.isAvailable ? 'Yes' : 'No' }}</p>
-        </li>
-      </ul>
-      <div *ngIf="timeSlots.length === 0">
-        <p>No time slots available.</p>
-      </div>
-    </div>
-  
-   
-  
-    <form [formGroup]="userForm" class="glass-form">
-      <div>
-        <label>
-                  </label>
-      </div>
-      
-    </form>
+<div class="page-container">
+  <button class="back-button" (click)="navigateToUserPage()">Назад</button>
+  <div *ngIf="!userData" class="no-user-data">
+    <p>Немає даних користувача.</p>
   </div>
+  <div class="user-container">
+    <br>
+    <h2>Time Slots</h2>
+    <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
+      <li *ngFor="let slot of timeSlots" class="timeslot-item">
+        <p><strong>Start Time:</strong> {{ slot.startTime || 'N/A'}}</p>
+        <p><strong>End Time:</strong> {{ slot.endTime || 'N/A'}}</p>
+        <p><strong>Is Available:</strong> {{ slot.isAvailable ? 'Yes' : 'No' }}</p>
+      </li>
+    </ul>
+    <div *ngIf="timeSlots.length === 0">
+      <p>No time slots available.</p>
+    </div>
+  </div>
+</div>

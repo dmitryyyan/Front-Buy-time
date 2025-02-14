@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TeacherService } from '../../services/teacher.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to get the current user
@@ -16,7 +16,12 @@ export class TeacherDetailsComponent implements OnInit {
   timeSlots: any[] = [];
   bookings: any[] = [];
 
-  constructor(private route: ActivatedRoute, private teacherService: TeacherService, @Inject(AuthService) private authService: AuthService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private teacherService: TeacherService,
+    @Inject(AuthService) private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     const teacherId = this.route.snapshot.paramMap.get('id');
@@ -70,5 +75,9 @@ export class TeacherDetailsComponent implements OnInit {
         console.error('Error updating time slot', error);
       }
     );
+  }
+
+  navigateToTeacherList() {
+    this.router.navigate(['/teacher']);
   }
 }

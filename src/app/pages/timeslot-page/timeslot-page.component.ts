@@ -143,4 +143,8 @@ export class TimeslotPageComponent implements OnInit {
   getLionEmojis(rating: number): string {
     return '🦁'.repeat(rating);
   }
+
+  navigateToUserPage(): void {
+    this.router.navigate(['/user-page']);
+  }
 }

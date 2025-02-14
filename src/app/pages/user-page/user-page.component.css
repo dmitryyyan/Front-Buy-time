@@ -1,22 +1,31 @@
-body {
+.page-container {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  background: url('../../../../lion.png') no-repeat center center fixed; /* Фонове зображення */
-  background-size: cover;
   color: #fff;
-}
-
-/* Основний стиль */
-.page-container {
+  position: relative;
   padding: 5%;
-  background-color: rgba(0, 75, 143, 0.8); /* Темно-синій з прозорістю */
-  border-radius: 10px;
+  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
+  border-radius: 0px;
   margin: 0;
   color: #fff;
   padding-bottom: 50%;
 }
 
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../../../../lion.png') no-repeat center center fixed; /* Background image from the specified folder */
+  background-size: cover;
+  opacity: 0.2; /* Make the image semi-transparent */
+  z-index: -1; /* Place it behind the content */
+}
+
+/* Основний стиль */
 .user-container {
   padding: 20px;
 }
@@ -88,7 +97,7 @@ button:hover {
 .add-timeslot-button {
 
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #00aaff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -113,56 +122,8 @@ button:hover {
   margin-top: 10px;
 }
 
-.view-timeslots-button,
-.view-bookings-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкий тіньовий ефект */
-}
 
-.view-timeslots-button i,
-.view-bookings-button i {
-  margin-right: 8px;
-}
 
-.view-timeslots-button:hover,
-.view-bookings-button:hover {
-  background-color: #0056b3;
-}
-
-@media (max-width: 1024px) {
-  .page-container {
-    padding: 3%;
-    padding-bottom: 60%;
-  }
-
-  .user-container h2 {
-    font-size: 1.8em;
-  }
-
-  .user-container p {
-    font-size: 1.1em;
-  }
-
-  button {
-    font-size: 14px;
-    padding: 8px 0;
-  }
-
-  .add-timeslot-button,
-  .view-timeslots-button,
-  .view-bookings-button {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-}
 
 @media (max-width: 768px) {
   .page-container {
@@ -179,7 +140,7 @@ button:hover {
   }
 
   button {
-    font-size: 12px;
+    font-size: 18px;
     padding: 17px 0;
   }
 
@@ -191,29 +152,4 @@ button:hover {
   }
 }
 
-@media (max-width: 480px) {
-  .page-container {
-    padding: 1%;
-    padding-bottom: 80%;
-  }
 
-  .user-container h2 {
-    font-size: 1.4em;
-  }
-
-  .user-container p {
-    font-size: 0.9em;
-  }
-
-  button {
-    font-size: 10px;
-    padding: 4px 0;
-  }
-
-  .add-timeslot-button,
-  .view-timeslots-button,
-  .view-bookings-button {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-}

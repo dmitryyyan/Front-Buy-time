@@ -1,39 +1,42 @@
-<div *ngIf="teacher">
-  <h2>{{ teacher.firstName }} {{ teacher.lastName }}</h2>
-  <p><strong>Role:</strong> {{ teacher.role }}</p>
-  <p><strong>Email:</strong> {{ teacher.email }}</p>
-  <p><strong>Description:</strong> {{ teacher.description || 'N/A' }}</p>
-  <p><strong>Tags:</strong> {{ teacher.tags || 'N/A' }}</p>
-</div>
-<div *ngIf="!teacher">
-  <p>Loading teacher details...</p>
-</div>
+<body>
+  <div class="teacher-details-container">
+    <button class="back-button" (click)="navigateToTeacherList()">← Back</button>
+    <div class="teacher-details-content">
+      <br><br>
+      <h2>{{ teacher.firstName }} {{ teacher.lastName }}</h2>
+      <p><strong>Role:</strong> {{ teacher.role }}</p>
+      <p><strong>Email:</strong> {{ teacher.email }}</p>
+      <p><strong>Description:</strong> {{ teacher.description || 'N/A' }}</p>
+      <p><strong>Tags:</strong> {{ teacher.tags || 'N/A' }}</p>
+      
+      <div *ngIf="timeSlots.length > 0">
+        <h3>Time Slots</h3>
+        <ul class="timeslot-list">
+          <li *ngFor="let slot of timeSlots" class="timeslot-item">
+            <p><strong>Date:</strong> {{ slot.startTime }}</p>
+            <p><strong>Time:</strong> {{ slot.endTime }}</p>
+            <p><strong>Booked:</strong> {{ slot.isAvailable }}</p>
+            <button *ngIf="slot.isAvailable" class="light-blue-button" (click)="bookTimeSlot(slot)">Book</button>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="timeSlots.length === 0">
+        <p>No time slots available.</p>
+      </div>
 
-<div *ngIf="timeSlots.length > 0">
-  <h3>Time Slots</h3>
-  <ul>
-    <li *ngFor="let slot of timeSlots">
-      <p><strong>Date:</strong> {{ slot.startTime }}</p>
-      <p><strong>Time:</strong> {{ slot.endTime }}</p>
-      <p><strong>Booked:</strong> {{ slot.isAvailable}}</p>
-      <button *ngIf="slot.isAvailable" (click)="bookTimeSlot(slot)">Book</button>
-    </li>
-  </ul>
-</div>
-<div *ngIf="timeSlots.length === 0">
-  <p>No time slots available.</p>
-</div>
-
-<div *ngIf="bookings.length > 0">
-  <h3>Bookings</h3>
-  <ul>
-    <li *ngFor="let booking of bookings">
-      <p><strong>Booking ID:</strong> {{ booking.id }}</p>
-      <p><strong>Date:</strong> {{ booking.createdAt }}</p>
-      <p><strong>Time:</strong> {{ booking.endTime }}</p>
-    </li>
-  </ul>
-</div>
-<div *ngIf="bookings.length === 0">
-  <p>No bookings available.</p>
-</div>
+      <div *ngIf="bookings.length > 0">
+        <h3>Bookings</h3>
+        <ul class="timeslot-list">
+          <li *ngFor="let booking of bookings" class="timeslot-item">
+            <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+            <p><strong>Date:</strong> {{ booking.createdAt }}</p>
+            <p><strong>Time:</strong> {{ booking.endTime }}</p>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="bookings.length === 0">
+        <p>No bookings available.</p>
+      </div>
+    </div>
+  </div>
+</body>

@@ -1,0 +1,92 @@
+.page-container {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  position: relative;
+  padding: 5%;
+  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
+  border-radius: 0px;
+  margin: 0;
+  color: #fff;
+  padding-bottom: 50%;
+}
+
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../../../../lion.png') no-repeat center center fixed; /* Background image from the specified folder */
+  background-size: cover;
+  opacity: 0.2; /* Make the image semi-transparent */
+  z-index: -1; /* Place it behind the content */
+}
+
+.back-button {
+  position: absolute;
+  top: 10px;
+  left: 4%;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #00aaff; /* Light blue button */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #0088cc; /* Darker blue on hover */
+}
+
+.user-container {
+  padding: 20px;
+}
+
+.user-container h2 {
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: #fff;
+}
+
+.user-container p {
+  margin: 5px 0;
+  font-size: 1.2em;
+}
+
+.timeslot-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.timeslot-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  background-color: #2a78af; /* Світло-синій, підходить для університетського стилю */
+}
+
+.timeslot-item p {
+  margin: 5px 0;
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 2%;
+    padding-bottom: 70%;
+  }
+
+  .user-container h2 {
+    font-size: 1.6em;
+  }
+
+  .user-container p {
+    font-size: 1em;
+  }
+}
