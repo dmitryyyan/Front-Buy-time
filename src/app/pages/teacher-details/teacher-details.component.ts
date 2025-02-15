@@ -1,8 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeacherService } from '../../services/teacher.service';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to get the current user
+import { CommonModule } from '@angular/common'; // Assuming you have an AuthService to get the current user
 
 @Component({
   selector: 'app-teacher-details',
@@ -19,8 +18,7 @@ export class TeacherDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private teacherService: TeacherService,
-    @Inject(AuthService) private authService: AuthService
+    private teacherService: TeacherService
   ) { }
 
   ngOnInit(): void {
@@ -46,7 +44,7 @@ export class TeacherDetailsComponent implements OnInit {
           return slot.id;
         });
         console.log('timeslotIds:', timeslotIds);
-        this.teacherService.getBookingsByTeacherId(teacherId).subscribe( // Pass teacherId instead of timeslotIds
+        this.teacherService.getBookingsByTimeslotIds(timeslotIds).subscribe( // Pass timeslotIds instead of teacherId
           (data) => {
             // Log the fetched data
             this.bookings = data.filter(booking => timeslotIds.includes(booking.timeslotId));
@@ -64,9 +62,7 @@ export class TeacherDetailsComponent implements OnInit {
   }
 
   bookTimeSlot(slot: any) {
-    const currentUser = this.authService.getCurrentUser();
     slot.isAvailable = false;
-    slot.userId1 = currentUser.id;
     this.teacherService.updateTimeSlot(slot).subscribe(
       (response) => {
         console.log('Time slot updated successfully', response);
