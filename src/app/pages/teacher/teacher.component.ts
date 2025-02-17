@@ -10,12 +10,12 @@ interface UserData {
   id: string; // Ensure the Id property is included
   firstName: string;
   lastName: string;
-  role: string;
   email: string;
   description: string;
   tags: string;
   message?: string;
   isTeacher: boolean;
+  rating: number;
 }
 
 @Component({

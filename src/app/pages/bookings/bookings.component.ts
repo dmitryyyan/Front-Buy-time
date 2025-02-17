@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UserDataService } from '../../services/user-data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
+import { Router } from '@angular/router';
 
 interface UserData {
   id: string; // Ensure the Id property is included
@@ -37,7 +38,8 @@ export class BookingsComponent implements OnInit {
   constructor(
     private bookingsService: BookingsService,
     private userDataService: UserDataService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -106,6 +108,10 @@ export class BookingsComponent implements OnInit {
         console.error('Error fetching time slots', error);
       }
     );
+  }
+
+  navigateToUserPage(): void {
+    this.router.navigate(['/user-page']);
   }
 
 }

@@ -1,26 +1,27 @@
 <div class="add-timeslot-container">
-  <h2>Add Time Slot</h2>
+  <h2>Створення тайм слоту</h2> <br>
   <!-- Display the active user's userId -->
-  <p>Active User ID: {{ timeSlotData.userId }}</p>
+  <!-- <p>Active User ID: {{ timeSlotData.userId }}</p> -->
   <form (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="date">Select Date</label>
+      <label for="date">Обрати дату </label>
       <input type="date" id="date" [(ngModel)]="selectedDate" name="date" required>
     </div>
+    <br>
     <div class="form-group">
-      <label>Select Time Slot:</label>
+      <label>Обрати час </label>
       <button type="button" (click)="selectTimeSlot('08:00', '12:00')">08:00 - 12:00</button>
       <button type="button" (click)="selectTimeSlot('12:00', '16:00')">12:00 - 16:00</button>
       <button type="button" (click)="selectTimeSlot('16:00', '20:00')">16:00 - 20:00</button>
     </div>
     <div class="form-group" *ngIf="timeIntervals.length > 0">
-      <label>Select 30-minute Intervals:</label>
+      <label>Оберіть 30-хвилинний інтервал:</label>
       <div *ngFor="let interval of timeIntervals">
         <input type="checkbox" [value]="interval" (change)="toggleIntervalSelection(interval)">
         {{ interval }}
       </div>
     </div>
-    <button type="submit" class="submit-button">Add Time Slot</button>
+    <button type="submit" class="submit-button">Створити</button>
     <div class="button-container1">
       <meta charset="UTF-8">
       <button (click)="button1Action()">

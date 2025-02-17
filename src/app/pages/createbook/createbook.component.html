@@ -1,23 +1,23 @@
 <div class="create-book-container">
-  <h2>Create Booking</h2>
+  <h2>Запис на зустріч</h2>
   <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
     <div class="form-group">
-      <label for="teacher">Select Teacher:</label>
+      <label for="teacher">Обрати викладача:</label>
       <select id="teacher" formControlName="teacherId" (change)="onTeacherChange($event)">
         <option *ngFor="let teacher of teachers" [value]="teacher.id">{{ teacher.firstName }} {{ teacher.lastName }}</option>
       </select>
     </div>
     <div class="form-group">
-      <label for="timeslot">Select Timeslot:</label>
+      <label for="timeslot">Обрати активний тайм слот:</label>
       <select id="timeslot" formControlName="timeslotId">
-        <option *ngFor="let timeslot of timeslots" [value]="timeslot.id">{{ timeslot.id }}</option>
+        <option *ngFor="let timeslot of timeslots" [value]="timeslot.id">{{ timeslot.startTime }} - {{timeslot.endTime}} </option>
       </select>
     </div>
     <div class="form-group">
-      <label for="message">Message:</label>
+      <label for="message">Повідомлення:</label>
       <textarea id="message" formControlName="message"></textarea>
     </div>
-    <button type="submit" [disabled]="!bookingForm.valid" class="submit-button">Book</button>
+    <button type="submit" [disabled]="!bookingForm.valid" class="submit-button">Створення</button>
   </form>
   <div *ngIf="message" class="message-box">{{ message }}</div>
   <div class="button-container">

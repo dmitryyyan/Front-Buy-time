@@ -6,12 +6,12 @@
   </div>
   <div class="user-container">
     <br>
-    <h2>Time Slots</h2>
+    <h2>Ваші тайм слоти</h2>
     <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
       <li *ngFor="let slot of timeSlots" class="timeslot-item">
-        <p><strong>Start Time:</strong> {{ slot.startTime || 'N/A'}}</p>
-        <p><strong>End Time:</strong> {{ slot.endTime || 'N/A'}}</p>
-        <p><strong>Is Available:</strong> {{ slot.isAvailable ? 'Yes' : 'No' }}</p>
+        <p><strong>Початковий час:</strong> {{ slot.startTime || 'N/A'}}</p>
+        <p><strong>Кінцевий час:</strong> {{ slot.endTime || 'N/A'}}</p>
+        <p><strong>Активний ?:</strong> {{ slot.isAvailable ? 'так' : 'ні' }}</p>
       </li>
     </ul>
     <div *ngIf="timeSlots.length === 0">

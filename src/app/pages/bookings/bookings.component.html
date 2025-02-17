@@ -1,19 +1,24 @@
-<div class="bookings-container">
-  <h1>Bookings</h1>
-  <table class="bookings-table">
-    <thead>
-      <tr>
-        <th>Status</th>
-        <th>Message</th>
-        <th>CreatedAt</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let booking of bookings">
-        <td>{{ booking.status }}</td>
-        <td>{{ booking.message }}</td>
-        <td>{{ booking.createdAt }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="page-container">
+  <button class="back-button" (click)="navigateToUserPage()">Назад</button>
+  <div *ngIf="!userData" class="no-user-data">
+    <p>Немає даних користувача.</p>
+  </div>
+  <div class="user-container">
+    <br>
+    <h2>Ваші бронювання</h2>
+    <div *ngFor="let booking of bookings" class="booking-form">
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <input type="text" id="status" [value]="booking.status" readonly>
+      </div>
+      <div class="form-group">
+        <label for="message">Message:</label>
+        <input type="text" id="message" [value]="booking.message" readonly>
+      </div>
+      <div class="form-group">
+        <label for="createdAt">Created At:</label>
+        <input type="text" id="createdAt" [value]="booking.createdAt" readonly>
+      </div>
+    </div>
+  </div>
 </div>
