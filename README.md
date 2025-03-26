@@ -1,59 +1,35 @@
-# BuyApp
+Інструкція по запуску проетку запуск виконувся на операційній ситемі Windows та в середовищі розробки VS Code:
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.5.
 
-## Development server
+1. Для початку потрібно створити бота в телеграмі це робиться за допомогою https://t.me/BotFather після його створення ви отримаєте ключ бота наприклад "7551270818:AAFcpELcLOyg5R9gjZ4SGIEqqwRJXbJl3Y0" його необхідно вставити в код server.js 13 рядок.
 
-To start a local development server, run:
+2. Далі в терміналі необхідно вести команду ng serve це для запуску frontend частни.
 
-```bash
-ng serve
-```
+3. Наступний крок запуск "костиля" node server.js це запуск самого бота після чого боту необхідно надісляти повідомлення. Цей код необхідно буде перести в бек.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+4. Далі запуск ngrok для тимчасового хосту по команді ngrok http localhost:4200    .
 
-## Code scaffolding
+5. Після 4 кроку ми отримаємо посилання яке необхідно надіслати в bot father https://t.me/BotFather далі порядок цього надсилання:
+    
+    --- В Botfather вводимо команду /setmenubutton після чого обераємо створеного бота після чого надсилає посилання яке було сворено за допогою ngrok після чого задаємо назву кнопкі приклад інструкці нижще представлений скріном.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+    ![alt text](image.png)
 
-```bash
-ng generate component component-name
-```
+6. Далі шукаємо в проекті файл angular.json та змінюємо рядок 58 приклад
+        це посилпння ngrok https://9aaf-45-151-236-231.ngrok-free.app
+        з нього в 58 рядок потрібно вставити цю частину 
+        9aaf-45-151-236-231.ngrok-free.app
+    ![alt text](image-1.png)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+7. Після чого перезапускаємо команду ng serve та заходимо в бот і натискаємо на створену кнопку приклад нижще 
+    ![alt text](image-2.png)
+    Після цього буде відкрито miniapp tg
+    Вітаю це була перша частина запуску проекту якщо ви бечете темний екран або якійсь надпис почніть все з початку)
 
-```bash
-ng generate --help
-```
+8. Якщо крок 7 виконаний можна перейти до запуску backend частини для цього потрібно запусти проект беку він буде наданий викладачем) для його запуску треба відкрити консоль в тому проекті та виконати послідовність команд  
+    - cd BuyTime_Api
+    - dotnet run
+ПІсля чого він буде запущений для перевірки перейдіть по посиланню http://localhost:5258/swagger/index.html якщо посилання не працює перевірте цю частину localhost:5258.
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Маю надію що це допоможе при запуску і подальшій його розробці. 
+Якщо є питання звяжіться через викладача зі мною.
