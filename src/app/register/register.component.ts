@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-register',
   imports: [CommonModule, FormsModule],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  
 })
 export class RegisterComponent {
   constructor(private http: HttpClient ) {}
