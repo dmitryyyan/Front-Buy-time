@@ -6,19 +6,27 @@
   <div class="user-container">
     <br>
     <h2>Ваші бронювання</h2>
-    <div *ngFor="let booking of bookings" class="booking-form">
+    <div *ngFor="let booking of bookings; let i = index" class="booking-form">
+      <div class="form-group">
+        <label for="firstName">Name</label>
+        <input type="text" id="firstName" [value]="usersArray[i]?.firstName || 'Немає даних'" readonly>
+      </div>
+
       <div class="form-group">
         <label for="status">Status:</label>
         <input type="text" id="status" [value]="booking.status" readonly>
       </div>
+
       <div class="form-group">
         <label for="message">Message:</label>
         <input type="text" id="message" [value]="booking.message" readonly>
       </div>
+
       <div class="form-group">
         <label for="createdAt">Created At:</label>
         <input type="text" id="createdAt" [value]="booking.createdAt" readonly>
       </div>
+      
     </div>
   </div>
 </div>

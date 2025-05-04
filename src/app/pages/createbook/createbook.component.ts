@@ -17,14 +17,16 @@ export class CreatebookComponent implements OnInit {
   teachers: any[] = [];
   timeslots: any[] = [];
   userId: string = '';
-  message: string = ''; // Додати змінну для повідомлення
+  message: string = '';
+  urlOfMeeting: string = '';// Додати змінну для повідомлення
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.bookingForm = this.fb.group({
       teacherId: ['', Validators.required],
       timeslotId: ['', Validators.required],
       message: [''],
-      status: [''],
+      status: ['Pedning'],
+      urlOfMeeting: [''],
     });
   }
 
@@ -108,8 +110,10 @@ export class CreatebookComponent implements OnInit {
       const bookingData = {
         userId: this.userId,
         timeslotId: this.bookingForm.get('timeslotId')?.value,
-        status: this.bookingForm.get('status')?.value,
         message: this.bookingForm.get('message')?.value,
+        status: this.bookingForm.get('status')?.value,
+        
+        urlOfMeeting: this.bookingForm.get('urlOfMeeting')?.value,
       };
 
       console.log('Booking data:', bookingData);

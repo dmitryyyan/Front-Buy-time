@@ -16,7 +16,8 @@ export class TeacherDetailsComponent implements OnInit {
   timeSlots: any[] = [];
   bookings: any[] = [];
   userId: string = ''; // Add userId property
-  message: string = ''; // Add message property
+  message: string = '';
+  urlOfMeeting: string = ''; // Add message property
 
   constructor(
     private route: ActivatedRoute,
@@ -120,7 +121,8 @@ export class TeacherDetailsComponent implements OnInit {
         userId: this.userId,
         timeslotId: slot.id,
         status: 'booked',
-        message: ''
+        message: '',
+        urlOfMeeting: '',
       };
 
       console.log('Booking data:', bookingData);

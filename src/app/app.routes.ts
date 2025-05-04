@@ -11,7 +11,7 @@ import { CryptoPaymentComponent } from './pages/crypto-payment/crypto-payment.co
 import { TestPayComponent } from './pages/test-pay/test-pay.component';
 
 export const routes: Routes = [
-  { path: '', component: CryptoPaymentComponent, pathMatch: 'full' },
+  { path: '', component: TeacherComponent, pathMatch: 'full' },
   { path: 'user-page', component: UserPageComponent },
   { path: 'new-page', component: NewPageComponent },
   { path: 'teacher', component: TeacherComponent },
