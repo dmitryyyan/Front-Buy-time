@@ -171,4 +171,7 @@ export class UserPageComponent implements OnInit {
   navigateToViewBookings() {
     this.router.navigate(['/bookings']);
   }
+  navigateToViewTimeslot1() {
+    this.router.navigate(['/time-slot']);
+  }
 }

@@ -9,6 +9,7 @@ import { TeacherDetailsComponent } from './pages/teacher-details/teacher-details
 import { TimeslotPageComponent } from './pages/timeslot-page/timeslot-page.component';
 import { CryptoPaymentComponent } from './pages/crypto-payment/crypto-payment.component';
 import { TestPayComponent } from './pages/test-pay/test-pay.component';
+import { TimeSlotComponent } from './pages/time-slot/time-slot.component';
 
 export const routes: Routes = [
   { path: '', component: TeacherComponent, pathMatch: 'full' },
@@ -22,4 +23,5 @@ export const routes: Routes = [
   { path : 'timeslot-page', component: TimeslotPageComponent },
   { path: 'crypto-payment', component: CryptoPaymentComponent },
   { path: 'test-pay', component: TestPayComponent },
+  { path: 'time-slot', component: TimeSlotComponent },
 ];
