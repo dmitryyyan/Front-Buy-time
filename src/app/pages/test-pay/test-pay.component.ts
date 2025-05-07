@@ -2,6 +2,18 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Connection, PublicKey, Transaction, SystemProgram } from '@solana/web3.js';
 
+declare global {
+  interface Window {
+    solana?: {
+      isPhantom?: boolean;
+      connect: () => Promise<{ publicKey: { toString: () => string } }>;
+      signMessage?: (message: Uint8Array) => Promise<{ signature: Uint8Array }>; // Додано опціональну властивість
+      disconnect: () => Promise<void>;
+      signTransaction: (transaction: Transaction) => Promise<Transaction>;
+    };
+  }
+}
+
 @Component({
   selector: 'app-test-pay',
   standalone: true,

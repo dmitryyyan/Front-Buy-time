@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 @Component({
   selector: 'app-createbook',
@@ -112,21 +112,68 @@ export class CreatebookComponent implements OnInit {
         timeslotId: this.bookingForm.get('timeslotId')?.value,
         message: this.bookingForm.get('message')?.value,
         status: this.bookingForm.get('status')?.value,
-        
         urlOfMeeting: this.bookingForm.get('urlOfMeeting')?.value,
       };
 
       console.log('Booking data:', bookingData);
 
-      this.http.post('http://localhost:5258/api/booking/create', bookingData).subscribe(response => {
-        console.log('Booking successful', response);
-        this.message = 'Букінг успішно відправлений!'; // Встановити повідомлення про успіх
-      }, error => {
-        console.error('Booking failed', error);
-        console.error('Error response:', error); // Логувати помилку для налагодження
-        this.message = 'Помилка при відправленні букінгу.'; // Встановити повідомлення про помилку
+      // Виконуємо оплату перед створенням букінгу
+      this.makePayment().then((paymentSuccessful) => {
+        if (paymentSuccessful) {
+          // Якщо оплата успішна, створюємо букінг
+          this.http.post('http://localhost:5258/api/booking/create', bookingData).subscribe(
+            (response) => {
+              console.log('Booking successful', response);
+              this.message = 'Букінг успішно відправлений!';
+            },
+            (error) => {
+              console.error('Booking failed', error);
+              this.message = 'Помилка при відправленні букінгу.';
+            }
+          );
+        } else {
+          this.message = 'Оплата не виконана. Букінг не створено.';
+        }
       });
     }
   }
 
+  async makePayment(): Promise<boolean> {
+    try {
+      const provider = (window as any).solana;
+      if (!provider || !provider.isPhantom) {
+        alert('Phantom Wallet not found. Please install it or open this app in a supported browser.');
+        return false;
+      }
+
+      const response = await provider.connect();
+      const publicKey = response.publicKey.toString();
+      const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+      const recipientPublicKey = new PublicKey('CQV3QSMYRF8P87ioHVmBHcvP94WaoV4JoB4NVn62KXjY'); // Replace with actual recipient public key
+      const lamports = 0.1 * LAMPORTS_PER_SOL; // 0.5 SOL
+
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: new PublicKey(publicKey),
+          toPubkey: recipientPublicKey,
+          lamports,
+        })
+      );
+
+      transaction.feePayer = new PublicKey(publicKey);
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+
+      const signedTransaction = await provider.signTransaction(transaction);
+      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+      await connection.confirmTransaction(signature, 'confirmed');
+
+      alert(`Оплата успішна! Підпис транзакції: ${signature}`);
+      return true;
+    } catch (error) {
+      console.error('Payment failed:', error);
+      alert('Помилка оплати: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      return false;
+    }
+  }
 }
