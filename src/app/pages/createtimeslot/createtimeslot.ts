@@ -39,6 +39,8 @@ export class AddTimeslotComponent implements OnInit {
   timeIntervals: string[] = [];
   selectedIntervals: string[] = [];
 
+  message: string = '';
+
   constructor(
     private teacherService: TeacherService,
     private route: ActivatedRoute,
@@ -158,17 +160,19 @@ export class AddTimeslotComponent implements OnInit {
       this.teacherService.createTimeSlot(slot).subscribe(
         response => {
           console.log('Time slot created:', response);
+          this.message = 'Successfully created time slot';
           successCount++;
-          if (successCount + errorCount === timeSlots.length) {
-            this.showResultMessage(successCount, errorCount);
-          }
+         // if (successCount + errorCount === timeSlots.length) {
+         //   this.showResultMessage(successCount, errorCount);
+         // }
         },
         error => {
           console.error('Error creating time slot:', error);
           errorCount++;
-          if (successCount + errorCount === timeSlots.length) {
-            this.showResultMessage(successCount, errorCount);
-          }
+          this.message = 'Error creating time slot';
+          //if (successCount + errorCount === timeSlots.length) {
+           // this.showResultMessage(successCount, errorCount);
+         // }
         }
       );
     });

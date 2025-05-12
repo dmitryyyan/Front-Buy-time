@@ -5,7 +5,14 @@ body, html {
   font-family: 'Roboto', sans-serif;
   background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
 }
-
+.message-box {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #d4edda; /* Light green background */
+  color: #155724; /* Dark green text */
+  text-align: center;
+}
 .add-timeslot-container {
   margin: 0;
   padding: 0;

@@ -2,23 +2,23 @@
   
 
 <div class="teacher-container">
-  <h2>Пошук викладачів</h2>
+  <h2>Search expert</h2>
   <div class="search-bar">
     <input class="input-text" type="text" placeholder="Search by First and Last Name" [(ngModel)]="searchName">
-    <button class="light-blue-button" (click)="searchTeachers()">пошук</button>
+    <button class="light-blue-button" (click)="searchTeachers()">Search</button>
   </div>
   <ul *ngIf="teachers.length > 0" class="teacher-list">
     <li *ngFor="let teacher of teachers" class="teacher-item">
-      <p><strong>Ім'я:</strong> {{ teacher.firstName }} {{ teacher.lastName }}</p>
-      <p><strong>Рейтинг:</strong> {{ teacher.rating }}</p>
+      <p><strong>Name:</strong> {{ teacher.firstName }} {{ teacher.lastName }}</p>
+      <p><strong>Rating:</strong> {{ teacher.rating }}</p>
       <p><strong>Email:</strong> {{ teacher.email }}</p>
-      <p><strong>Опис:</strong> {{ teacher.description || 'N/A' }}</p>
-      <p><strong>Теги:</strong> {{ teacher.tags || 'N/A' }}</p>
+      <p><strong>Description:</strong> {{ teacher.description || 'N/A' }}</p>
+      <p><strong>Tegs:</strong> {{ teacher.tags || 'N/A' }}</p>
       <button class="light-blue-button" (click)="viewTeacherDetails(teacher.id)">відкрити деталі</button>
     </li>
   </ul>
   <div *ngIf="teachers.length === 0">
-    <p>Немає даних викладачів.</p>
+    <p>No DATA ABOUT EXPERT.</p>
   </div>
 
   <div class="button-container">

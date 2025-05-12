@@ -31,7 +31,8 @@ export class TeacherService {
   }
 
   createTimeSlot(timeSlotData: any): Observable<any> {
-    console.log('Creating time slot:', timeSlotData); // Log the data being sent
+    console.log('Creating time slot:', timeSlotData);
+     // Log the data being sent
     return this.http.post<any>(`${this.timeSlotApiUrl}/create`, timeSlotData);
   }
 

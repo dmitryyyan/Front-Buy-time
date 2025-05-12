@@ -2,16 +2,16 @@
 <div class="page-container">
   <button class="back-button" (click)="navigateToUserPage()">Назад</button>
   <div *ngIf="!userData" class="no-user-data">
-    <p>Немає даних користувача.</p>
+    <p>No data.</p>
   </div>
   <div class="user-container">
     <br>
-    <h2>Ваші тайм слоти</h2>
+    <h2>Your time slot</h2>
     <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
       <li *ngFor="let slot of timeSlots" class="timeslot-item">
-        <p><strong>Початковий час:</strong> {{ slot.startTime || 'N/A'}}</p>
-        <p><strong>Кінцевий час:</strong> {{ slot.endTime || 'N/A'}}</p>
-        <p><strong>Активний ?:</strong> {{ slot.isAvailable ? 'так' : 'ні' }}</p>
+        <p><strong>Start time:</strong> {{ slot.startTime || 'N/A'}}</p>
+        <p><strong>Finish time:</strong> {{ slot.endTime || 'N/A'}}</p>
+        <p><strong>Active:</strong> {{ slot.isAvailable ? 'так' : 'ні' }}</p>
       </li>
     </ul>
     <div *ngIf="timeSlots.length === 0">

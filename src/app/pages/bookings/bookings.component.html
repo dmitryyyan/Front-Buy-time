@@ -1,11 +1,11 @@
 <div class="page-container">
   <button class="back-button" (click)="navigateToUserPage()">Назад</button>
   <div *ngIf="!userData" class="no-user-data">
-    <p>Немає даних користувача.</p>
+    <p>No data.</p>
   </div>
   <div class="user-container">
     <br>
-    <h2>Ваші бронювання</h2>
+    <h2>Your Booking</h2>
     <div *ngFor="let booking of bookings; let i = index" class="booking-form">
       <div class="form-group">
         <label for="firstName">Name</label>

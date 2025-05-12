@@ -10,12 +10,12 @@
       <p><strong>Tags:</strong> {{ teacher.tags || 'N/A' }}</p>
       
       <div *ngIf="timeSlots.length > 0">
-        <h3>Тайм слоти</h3>
+        <h3>Time slots expert</h3>
         <ul class="timeslot-list">
           <li *ngFor="let slot of timeSlots" class="timeslot-item">
-            <p><strong>Початковий час:</strong> {{ slot.startTime }}</p>
-            <p><strong>Кінцевий час:</strong> {{ slot.endTime }}</p>
-            <p><strong>Доступно ?</strong> {{ slot.isAvailable }}</p>
+            <p><strong>Start time:</strong> {{ slot.startTime }}</p>
+            <p><strong>Finish time:</strong> {{ slot.endTime }}</p>
+            <p><strong>Active:</strong> {{ slot.isAvailable }}</p>
             <button *ngIf="slot.isAvailable" class="light-blue-button" (click)="bookTimeSlot(slot)">Book</button>
           </li>
         </ul>
@@ -28,10 +28,10 @@
         <h3>Bookings</h3>
         <ul class="timeslot-list">
           <li *ngFor="let booking of bookings" class="timeslot-item">
-            <p *ngIf="booking.user"><strong>Забронював -- </strong> {{ booking.user.firstName }} {{ booking.user.lastName }}</p>
+            <p *ngIf="booking.user"><strong>Booking -- </strong> {{ booking.user.firstName }} {{ booking.user.lastName }}</p>
             <p *ngIf="booking.user" > <strong>Email: </strong> {{booking.user.email}}</p>
-            <p><strong>Статус:</strong> {{ booking.status }}</p>
-            <p><strong>Час створення:</strong> {{ booking.createdAt }}</p>
+            <p><strong>Status:</strong> {{ booking.status }}</p>
+            <p><strong>Time create:</strong> {{ booking.createdAt }}</p>
             <p><strong>Time:</strong> {{ booking.endTime }}</p>
             
           </li>

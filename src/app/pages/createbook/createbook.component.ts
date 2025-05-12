@@ -271,7 +271,6 @@ export class CreatebookComponent implements OnInit {
   }
 
   submitBooking(): void {
-    // Remove payment process logic and directly create the booking
     if (this.bookingForm.valid) {
       const bookingData = {
         userId: this.userId,
@@ -284,21 +283,18 @@ export class CreatebookComponent implements OnInit {
 
       console.log('Booking data:', bookingData);
 
-      // Directly create the booking
       this.http.post('http://localhost:5258/api/booking/create', bookingData).subscribe(
         (response) => {
           this.createBooking();
           console.log('Booking successful', response);
-          this.message = 'Букінг успішно відправлений!';
+          this.message = 'Success! Booking created.';
         },
         (error) => {
           console.error('Booking failed', error);
-          this.message = 'Помилка при відправленні букінгу.';
+          this.message = 'Error! Booking failed.';
         }
       );
     }
   }
-
-    
-  }
+}
 
