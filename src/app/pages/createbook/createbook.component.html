@@ -2,6 +2,18 @@
   <h2>Запис на зустріч</h2>
   <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
 
+    
+      <button
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        (click)="connectWallet()"
+        [disabled]="isConnected"
+      >
+        {{ isConnected ? 'Wallet connected' : 'Connect wallet' }}
+      </button>
+      <div *ngIf="publicKey" class="mt-2 text-gray-700">
+        Connected: {{ publicKey }}
+      </div>
+
     <div class="form-group">
       <label for="teacher">Обрати викладача:</label>
       <select id="teacher" formControlName="teacherId" (change)="onTeacherChange($event)">

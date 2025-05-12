@@ -5,18 +5,21 @@
   </div>
   <div class="user-container">
     <br>
-    <h2>Ваші тайм слоти</h2>
+    <h2>Очікують на підтвердження</h2>
     <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
       <ng-container *ngFor="let slot of timeSlots">
+
+        
         <li class="timeslot-item" *ngIf="!slot.isAvailable">
-          <p *ngIf="slot.startTime"><strong>Початковий час:</strong> {{ slot.startTime }}</p>
-          <p *ngIf="slot.endTime"><strong>Кінцевий час:</strong> {{ slot.endTime }}</p>
-          <p><strong>Активний ?:</strong> ні</p>
-          <p><strong>Статус:</strong> {{ slot.isConfirmed ? 'сonfirmed' : 'Pending' }}</p>
           <div *ngIf="slot.userDetails?.firstName; else noData">
             <p><strong>Ім'я користувача:</strong> {{ slot.userDetails.firstName }} {{ slot.userDetails.lastName }}</p>
             <p *ngIf="slot.userDetails?.email"><strong>Email користувача:</strong> {{ slot.userDetails.email }}</p>
           </div>
+          <p *ngIf="slot.startTime"><strong>Початковий час:</strong> {{ slot.startTime }}</p>
+          <p *ngIf="slot.endTime"><strong>Кінцевий час:</strong> {{ slot.endTime }}</p>
+         <!-- <p><strong>Активний ?:</strong> ні</p>-->
+          <p><strong>Статус:</strong> {{ slot.isConfirmed ? 'сonfirmed' : 'Pending' }}</p>
+          
           <button 
             class="confirm-button" 
             *ngIf="!slot.isConfirmed" 

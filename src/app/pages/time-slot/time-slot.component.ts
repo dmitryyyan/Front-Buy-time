@@ -6,7 +6,30 @@ import { Router } from '@angular/router';
 import { TimeslotService } from '../../services/timeslot.service';
 import { UserDataService } from '../../services/user-data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  Connection,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+  SystemProgram,
+} from '@solana/web3.js';
+import { Buffer } from 'buffer';
 
+declare global {
+  interface Window {
+    solana?: {
+      isPhantom?: boolean;
+      connect: () => Promise<{ publicKey: { toString: () => string } }>;
+      disconnect: () => Promise<void>;
+      signTransaction: (transaction: Transaction) => Promise<Transaction>;
+    };
+  }
+}
+
+enum BookingInstructionType {
+  ExpertCancel = 2,
+  ConfirmMeeting = 3,
+}
 
 interface UserData {
     id: string; // Ensure the Id property is included
@@ -57,7 +80,7 @@ interface  userDetails {
   selector: 'app-time-slot',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './time-slot.component.html',
- // styleUrls: ['./time-slot.component.css']
+  styleUrls: ['./time-slot.component.css']
 })
 export class TimeSlotComponent implements OnInit {
     userData: UserData | null = null;
@@ -67,6 +90,19 @@ export class TimeSlotComponent implements OnInit {
     chatId: string | null = null;
     userForm: FormGroup;
     isSubmitting: boolean = false;
+
+    isConnected = false;
+    publicKey: string | null = null;
+    studentPubkey = '';
+    bookingPda = '';
+    passed = true;
+    unixTimestamp = 0;
+    oraclePublicKey: string = '';
+    stydentPublicKey: string = '';
+
+  private connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+  private programId = new PublicKey('4ws28MPExiFotyySaD8Y3wNq3xEa9ZP3Eqbsf9m6fbu8');
+
 
   constructor(
     private http: HttpClient,
@@ -104,6 +140,110 @@ export class TimeSlotComponent implements OnInit {
       }
     );
   }
+  // Метод для отримання даних користувача за chatId
+
+   async getBookingPda(student: PublicKey, expert: PublicKey, meetingTime: number): Promise<PublicKey> {
+    const meetingTimeBuffer = Buffer.alloc(8);
+    meetingTimeBuffer.writeInt32LE(Number(meetingTime), 0); 
+    const [pda] = await PublicKey.findProgramAddress(
+      [Buffer.from('booking'), student.toBuffer(), expert.toBuffer(), meetingTimeBuffer],
+      this.programId
+    );
+    return pda;
+  }
+
+  expertCancelInstruction(): Buffer {
+    return Buffer.from([BookingInstructionType.ExpertCancel]);
+  }
+
+  confirmMeetingInstruction(passed: boolean): Buffer {
+    const buf = Buffer.alloc(2);
+    buf.writeUInt8(BookingInstructionType.ConfirmMeeting, 0);
+    buf.writeUInt8(passed ? 1 : 0, 1);
+    return buf;
+  }
+    
+
+  async expertCancel() {
+    try {
+      const expert = new PublicKey(this.publicKey!);
+      const student = new PublicKey(this.studentPubkey);
+      const pda = new PublicKey(this.bookingPda);
+      const data = this.expertCancelInstruction();
+
+      const ix = new TransactionInstruction({
+        keys: [
+          { pubkey: expert, isSigner: true, isWritable: true },
+          { pubkey: pda, isSigner: false, isWritable: true },
+          { pubkey: student, isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+        ],
+        programId: this.programId,
+        data,
+      });
+
+      const tx = new Transaction().add(ix);
+      tx.feePayer = expert;
+      const { blockhash } = await this.connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+
+      const signed = await window.solana!.signTransaction(tx);
+      const sig = await this.connection.sendRawTransaction(signed.serialize());
+      await this.connection.confirmTransaction(sig, 'confirmed');
+
+    alert('Booking canceled! Signature: ' + sig);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        alert('Failed to cancel booking: ' + err.message);
+      } else {
+        alert('Failed to cancel booking: ' + String(err));
+      }
+    }
+  }
+
+  async confirmMeeting() {
+    try {
+      const oracle = new PublicKey(this.oraclePublicKey!);
+      const student = new PublicKey(this.stydentPublicKey);
+      const pda = await this.getBookingPda(student, oracle, this.unixTimestamp);
+      const data = this.confirmMeetingInstruction(this.passed);
+      console.log('tttttt', this.unixTimestamp);
+      console.log('PDA', pda.toString());
+
+      const ix = new TransactionInstruction({
+        keys: [
+          { pubkey: oracle, isSigner: true, isWritable: false },
+          { pubkey: pda, isSigner: false, isWritable: true },
+          { pubkey: student, isSigner: false, isWritable: true },
+          { pubkey: new PublicKey(this.oraclePublicKey!), isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+        ],
+        programId: this.programId,
+        data,
+      });
+
+      const tx = new Transaction().add(ix);
+      tx.feePayer = oracle;
+      const { blockhash } = await this.connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+
+      const signed = await window.solana!.signTransaction(tx);
+      const sig = await this.connection.sendRawTransaction(signed.serialize());
+      await this.connection.confirmTransaction(sig, 'confirmed');
+
+      alert('Meeting confirmed! Signature: ' + sig);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        alert('Failed to confirm meeting: ' + err.message);
+      } else {
+        alert('Failed to confirm meeting: ' + String(err));
+      }
+    }
+  }
+
+
 
   fetchUserData(): void {
     if (!this.chatId) {
@@ -114,6 +254,8 @@ export class TimeSlotComponent implements OnInit {
       (data) => {
         console.log('Fetched user data:', data); // Log the fetched data
         if (data && !data.message) {
+         
+
           this.userData = data; // Зберігаємо отримані дані користувача
           this.userForm.patchValue({ isTeacher: data.isTeacher }, { emitEvent: false }); // Set the checkbox value without emitting event
           console.log('User Data:', data); // Log the entire user data
@@ -124,6 +266,19 @@ export class TimeSlotComponent implements OnInit {
           } else {
             console.error('User ID is undefined');
           }
+
+           //console.log('22222222',this.userData.id);
+          this.http.get<any>(`http://localhost:5258/api/wallet/get-by-user-id?userId=${this.userData.id}`).subscribe(
+            (walletData) => {
+              console.log('Fetched wallet data:', walletData);
+              console.log('SUDENT----walletadress', walletData.walletAddress);
+              this.oraclePublicKey=walletData.walletAddress;
+              //console.log(this.stydentPyblicKey) // Log the fetched wallet data
+            },
+            (error) => {
+              console.error('Error fetching wallet data', error);
+            }
+          );
         } else {
           console.log('No user data available');
         }
@@ -136,32 +291,49 @@ export class TimeSlotComponent implements OnInit {
 
 
   fetchTimeSlots(userId: string): void {
-    this.timeslotService.getAllTimeSlots().subscribe(
-      (data) => {
-        console.log('Fetched all time slots:', data);
-        this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase()); // Витягуємо всі тайм-слоти для користувача
-      },
-      (error) => {
-        console.error('Error fetching time slots', error);
-      }
-    );
-  }
+  this.timeslotService.getAllTimeSlots().subscribe(
+    (data: TimeSlot[]) => {
+      console.log('Fetched all time slots:', data);
+      this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase());
+      this.timeSlots.forEach(slot => {
+     // console.log('START',slot.startTime); // Лог startTime для кожного слота
+      });
+    },
+    (error) => {
+      console.error('Error fetching time slots', error);
+    }
+  );
+}
 
   fetchInactiveTimeSlots(userId: string): void {
     this.timeslotService.getAllTimeSlots().subscribe(
       (data) => {
-        console.log('Fetched all time slots:', data);
+       // console.log('Fetched all time slots:', data);
         console.log(userId); // Лог userId
         data.forEach(slot => {
           if (!slot.isAvailable && slot.userId === userId) { // Фільтруємо тільки неактивні слоти для конкретного користувача
-            console.log('Processing slot:', slot.id); // Лог слота
+            console.log('Processing slot:', slot.id);
+            console.log('S1',slot.startTime) // Лог слота
+           
+            
+            
             this.http.get<any>(`http://localhost:5258/api/booking/get-by-timeslot-id?timeSlotId=${slot.id}`).subscribe(
               (userData) => {
                 if (userData && Array.isArray(userData) && userData.length > 0 && userData[0].userId) {
-                  console.log('Fetched user data for slot:', userData[0].status); // Лог статусу
+                  console.log('WWWWWWWWWWWWWWWWWW')
+                  console.log('Fetched user data for slot:', userData[0].createdAt); // Лог статусу
                   slot['userData'] = userData[0]; // Додаємо дані користувача до слота
                   slot.isConfirmed = userData[0].status === 'confirmed'; // Set isConfirmed based on status
-
+                   // Convert startTime to UNIX timestamp and log it
+            
+           // Зберігаємо UNIX timestamp
+            
+            // Add 3 hours to the createdAt timestamp and remove fractional seconds
+            const createdAt = new Date(userData[0].createdAt);
+            createdAt.setHours(createdAt.getHours() + 3); // Add 3 hours
+            const adjustedTimestamp = Math.floor(createdAt.getTime() / 1000); // Convert to UNIX timestamp without fractional seconds
+            console.log('Fetched user data for slot (adjusted):', adjustedTimestamp);
+            this.unixTimestamp = adjustedTimestamp; // Зберігаємо UNIX timestamp
                   // Додано запит до API для отримання даних користувача за userData[0].userId
                   this.http.get<any>(`http://localhost:5258/api/user/get-by-id?id=${userData[0].userId}`).subscribe(
                     (userDetails) => {
@@ -181,6 +353,18 @@ export class TimeSlotComponent implements OnInit {
                     },
                     (error) => {
                       console.error('Error fetching user details:', error);
+                    }
+                  );
+
+                  this.http.get<any>(`http://localhost:5258/api/wallet/get-by-user-id?userId=${userData[0].userId}`).subscribe(
+                    (walletData) => {
+                      console.log('Fetched wallet data:', walletData);
+                      console.log('ORACLE----walletadress', walletData.walletAddress);
+                      this.stydentPublicKey=walletData.walletAddress;
+                      //console.log(this.stydentPyblicKey) // Log the fetched wallet data
+                    },
+                    (error) => {
+                      console.error('Error fetching wallet data', error);
                     }
                   );
                 } else {
@@ -207,7 +391,9 @@ export class TimeSlotComponent implements OnInit {
       confirmationMessage,
       contactLink
     };
-  
+
+    this.confirmMeeting();
+
     this.http.post('http://localhost:5258/api/booking/confirm', requestBody).subscribe(
       (response: any) => {
         if (response && response.error) {

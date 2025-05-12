@@ -1,6 +1,18 @@
-
 <div class="page-container">
+
+ 
+
   <div *ngIf="userData" class="user-data">
+
+  <div class="wallet-container">
+    <div *ngIf="isWalletConnected; else showConnectButton" class="wallet-info">
+      <p><strong>Гаманець підключено:</strong> {{ walletAddress }}</p>
+    </div>
+    <ng-template #showConnectButton>
+      <button (click)="connectWallet()">Підключити гаманець</button>
+    </ng-template>
+  </div>
+
     <h1>Дані користувача:</h1>
     <p><strong>Ім'я:</strong> {{ userData.firstName }} {{ userData.lastName }}</p>
     <p><strong>Email:</strong> {{ userData.email }}</p>

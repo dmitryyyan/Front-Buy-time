@@ -11,7 +11,7 @@ export class TimeslotService {
   constructor(private http: HttpClient) { }
 
   getAllTimeSlots(): Observable<any[]> {
-    console.log('Fetching slot data from:', `${this.apiUrl}/get-all`);
+   // console.log('Fetching slot data from:', `${this.apiUrl}/get-all`);
     return this.http.get<any[]>(`${this.apiUrl}/get-all`);
   }
 

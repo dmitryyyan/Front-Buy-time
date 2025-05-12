@@ -122,6 +122,15 @@ button:hover {
   margin-top: 10px;
 }
 
+.wallet-container {
+ 
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 85%;
+  margin-top: 0%;
+  text-size-adjust: 0.9em;
+  font-size: 0.8em;
+}
 
 
 
