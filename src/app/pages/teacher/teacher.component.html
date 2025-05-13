@@ -14,7 +14,7 @@
       <p><strong>Email:</strong> {{ teacher.email }}</p>
       <p><strong>Description:</strong> {{ teacher.description || 'N/A' }}</p>
       <p><strong>Tegs:</strong> {{ teacher.tags || 'N/A' }}</p>
-      <button class="light-blue-button" (click)="viewTeacherDetails(teacher.id)">відкрити деталі</button>
+      <button class="light-blue-button" (click)="viewTeacherDetails(teacher.id)">Open details</button>
     </li>
   </ul>
   <div *ngIf="teachers.length === 0">

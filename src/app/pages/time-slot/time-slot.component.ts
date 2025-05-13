@@ -118,6 +118,7 @@ export class TimeSlotComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('111111',this.unixTimestamp);
     this.userDetails = {
       firstName: 'Невідомо',
       lastName: 'Невідомо',
@@ -296,7 +297,8 @@ export class TimeSlotComponent implements OnInit {
       console.log('Fetched all time slots:', data);
       this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase());
       this.timeSlots.forEach(slot => {
-     // console.log('START',slot.startTime); // Лог startTime для кожного слота
+      console.log('START',slot.startTime);
+      this.unixTimestamp = Math.floor(new Date(slot.startTime).getTime() / 1000);// Лог startTime для кожного слота
       });
     },
     (error) => {
@@ -329,11 +331,11 @@ export class TimeSlotComponent implements OnInit {
            // Зберігаємо UNIX timestamp
             
             // Add 3 hours to the createdAt timestamp and remove fractional seconds
-            const createdAt = new Date(userData[0].createdAt);
-            createdAt.setHours(createdAt.getHours() + 3); // Add 3 hours
-            const adjustedTimestamp = Math.floor(createdAt.getTime() / 1000); // Convert to UNIX timestamp without fractional seconds
-            console.log('Fetched user data for slot (adjusted):', adjustedTimestamp);
-            this.unixTimestamp = adjustedTimestamp; // Зберігаємо UNIX timestamp
+            // const createdAt = new Date(userData[0].createdAt);
+            // createdAt.setHours(createdAt.getHours() + 3); // Add 3 hours
+            // const adjustedTimestamp = Math.floor(createdAt.getTime() / 1000); // Convert to UNIX timestamp without fractional seconds
+            // console.log('Fetched user data for slot (adjusted):', adjustedTimestamp);
+            // this.unixTimestamp = adjustedTimestamp; // Зберігаємо UNIX timestamp
                   // Додано запит до API для отримання даних користувача за userData[0].userId
                   this.http.get<any>(`http://localhost:5258/api/user/get-by-id?id=${userData[0].userId}`).subscribe(
                     (userDetails) => {

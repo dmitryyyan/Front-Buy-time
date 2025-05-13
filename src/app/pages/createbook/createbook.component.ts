@@ -75,6 +75,7 @@ export class CreatebookComponent implements OnInit {
       message: [''],
       status: ['Pedning'],
       urlOfMeeting: [''],
+      startTime: [''],
     });
   }
 
@@ -128,9 +129,11 @@ export class CreatebookComponent implements OnInit {
 
     this.timeslots.forEach(slot => {
       // Replace slot.startTime with the current time
-    const unixTimestamp = Math.floor(Date.now() / 1000);
-    console.log('S1 (UNIX)', unixTimestamp);
-    this.unixTimestamp = unixTimestamp;
+    // const unixTimestamp = Math.floor(Date.now() / 1000);
+    // console.log('S1 (UNIX)', unixTimestamp);
+    // this.unixTimestamp = unixTimestamp;
+
+
     });
       const student = new PublicKey(this.stydentPyblicKey);
       const expert = new PublicKey(this.expertPublicKey);
@@ -195,8 +198,12 @@ export class CreatebookComponent implements OnInit {
   loadTimeslots(teacherId: string): void {
     console.log('Loading timeslots for teacher:', teacherId);
     this.http.get('http://localhost:5258/api/timeslot/get-all').subscribe((data: any) => {
+      console.log('Fetched timeslots222s:', data); // Log the fetched timeslots
       this.timeslots = data.filter((timeslot: any) => timeslot.userId === teacherId && timeslot.isAvailable === true);
+      // ...existing code...
+      console.log('Filtered timeslots:', this.timeslots.map(slot => slot.startTime));
       
+// ...existing code...
       // Додати запит до гаманця
           this.http.get<any>(`http://localhost:5258/api/wallet/get-by-user-id?userId=${teacherId}`).subscribe(
             (walletData) => {
@@ -270,31 +277,36 @@ export class CreatebookComponent implements OnInit {
     this.loadTimeslots(teacherId);
   }
 
-  submitBooking(): void {
-    if (this.bookingForm.valid) {
-      const bookingData = {
-        userId: this.userId,
-        timeslotId: this.bookingForm.get('timeslotId')?.value,
-        message: this.bookingForm.get('message')?.value,
-        status: this.bookingForm.get('status')?.value,
-        urlOfMeeting: this.bookingForm.get('urlOfMeeting')?.value,
-        
-      };
+ submitBooking(): void {
+  if (this.bookingForm.valid) {
+    const selectedTimeslotId = this.bookingForm.get('timeslotId')?.value;
+    // Знайти об'єкт таймслота за id
+    const selectedTimeslot = this.timeslots.find(slot => slot.id === selectedTimeslotId);
 
-      console.log('Booking data:', bookingData);
+    const bookingData = {
+      userId: this.userId,
+      timeslotId: selectedTimeslotId,
+      message: this.bookingForm.get('message')?.value,
+      status: this.bookingForm.get('status')?.value,
+      urlOfMeeting: this.bookingForm.get('urlOfMeeting')?.value,
+      startTime: selectedTimeslot ? selectedTimeslot.startTime : null // <-- тут час із таймслота
+    };
 
-      this.http.post('http://localhost:5258/api/booking/create', bookingData).subscribe(
-        (response) => {
-          this.createBooking();
-          console.log('Booking successful', response);
-          this.message = 'Success! Booking created.';
-        },
-        (error) => {
-          console.error('Booking failed', error);
-          this.message = 'Error! Booking failed.';
-        }
-      );
-    }
+    console.log('Start Time:', bookingData.startTime);
+    this.unixTimestamp = Math.floor(new Date(bookingData.startTime).getTime() / 1000);
+    console.log('UNIX Timestamp:', this.unixTimestamp);
+
+    this.http.post('http://localhost:5258/api/booking/create', bookingData).subscribe(
+      (response) => {
+        this.createBooking();
+        console.log('Booking successful', response);
+        this.message = 'Success! Booking created.';
+      },
+      (error) => {
+        console.error('Booking failed', error);
+        this.message = 'Error! Booking failed.';
+      }
+    );
   }
 }
-
+}
