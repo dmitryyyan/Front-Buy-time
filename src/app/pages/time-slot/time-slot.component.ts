@@ -62,6 +62,7 @@ interface TimeSlot {
   userDetails?: UserDetails; // Використання нового інтерфейсу UserDetails
   userData?: { id: string }; // Add userData property with id field
   isConfirmed?: boolean; // Add isConfirmed property
+  unixTimestamp?: number; // Додаємо unixTimestamp для коректної роботи
 }
 
 interface  userDetails {
@@ -124,10 +125,43 @@ export class TimeSlotComponent implements OnInit {
       lastName: 'Невідомо',
       email: 'Невідомо'
     }; // Ініціалізація userDetails значеннями за замовчуванням
-    console.log('d', this.userDetails); // Лог userDetails після ініціалізації
+    console.log('d', this.userDetails);
+     // Лог userDetails після ініціалізації
     this.fetchChatId();
-    this.fetchInactiveTimeSlots(''); // Завантажити слоти для конкретного вчителя
+    
+    this.fetchInactiveTimeSlots('');
+     // Завантажити слоти для конкретного вчителя
   }
+
+openConfirmationDialog(slotId: string): void {
+  const slot = this.timeSlots.find(s => s.id === slotId); 
+  if (!slot || !slot.userData) {
+    alert('Неможливо знайти відповідний слот або дані користувача.');
+    return;
+  }
+  this.http.get<any>(`http://localhost:5258/api/timeslot/get-by-id?id=${slotId}`).subscribe(
+    (timeslotDetails) => {
+      slot.unixTimestamp = Math.floor(new Date(timeslotDetails[0].startTime).getTime() / 1000);
+      console.log('Slot UNIX timestamp:', slot.unixTimestamp);
+      // Після того як unixTimestamp отримано, викликаємо confirmBooking
+      const bookingId = slot.userData.id;
+      const confirmationMessage = prompt('Введіть повідомлення для підтвердження:');
+      if (!confirmationMessage) {
+        alert('Повідомлення не може бути порожнім.');
+        return;
+      }
+      const contactLink = prompt('Введіть посилання для контакту:');
+      if (!contactLink) {
+        alert('Посилання не може бути порожнім.');
+        return;
+      }
+      this.confirmBooking(bookingId, confirmationMessage, contactLink, slot.unixTimestamp);
+    },
+    (error) => {
+      alert('Не вдалося отримати дані таймслота.');
+    }
+  );
+}
 
   fetchChatId(): void {
     this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
@@ -203,46 +237,7 @@ export class TimeSlotComponent implements OnInit {
     }
   }
 
-  async confirmMeeting() {
-    try {
-      const oracle = new PublicKey(this.oraclePublicKey!);
-      const student = new PublicKey(this.stydentPublicKey);
-      const pda = await this.getBookingPda(student, oracle, this.unixTimestamp);
-      const data = this.confirmMeetingInstruction(this.passed);
-      console.log('tttttt', this.unixTimestamp);
-      console.log('PDA', pda.toString());
-
-      const ix = new TransactionInstruction({
-        keys: [
-          { pubkey: oracle, isSigner: true, isWritable: false },
-          { pubkey: pda, isSigner: false, isWritable: true },
-          { pubkey: student, isSigner: false, isWritable: true },
-          { pubkey: new PublicKey(this.oraclePublicKey!), isSigner: false, isWritable: true },
-          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
-        ],
-        programId: this.programId,
-        data,
-      });
-
-      const tx = new Transaction().add(ix);
-      tx.feePayer = oracle;
-      const { blockhash } = await this.connection.getLatestBlockhash();
-      tx.recentBlockhash = blockhash;
-
-      const signed = await window.solana!.signTransaction(tx);
-      const sig = await this.connection.sendRawTransaction(signed.serialize());
-      await this.connection.confirmTransaction(sig, 'confirmed');
-
-      alert('Meeting confirmed! Signature: ' + sig);
-    } catch (err) {
-      console.error(err);
-      if (err instanceof Error) {
-        alert('Failed to confirm meeting: ' + err.message);
-      } else {
-        alert('Failed to confirm meeting: ' + String(err));
-      }
-    }
-  }
+ 
 
 
 
@@ -294,11 +289,11 @@ export class TimeSlotComponent implements OnInit {
   fetchTimeSlots(userId: string): void {
   this.timeslotService.getAllTimeSlots().subscribe(
     (data: TimeSlot[]) => {
-      console.log('Fetched all time slots:', data);
+      console.log('Fetched all time slots111s:', data);
       this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase());
       this.timeSlots.forEach(slot => {
       console.log('START',slot.startTime);
-      this.unixTimestamp = Math.floor(new Date(slot.startTime).getTime() / 1000);// Лог startTime для кожного слота
+     
       });
     },
     (error) => {
@@ -315,7 +310,8 @@ export class TimeSlotComponent implements OnInit {
         data.forEach(slot => {
           if (!slot.isAvailable && slot.userId === userId) { // Фільтруємо тільки неактивні слоти для конкретного користувача
             console.log('Processing slot:', slot.id);
-            console.log('S1',slot.startTime) // Лог слота
+            console.log('S1',slot.startTime)
+             // Лог слота
            
             
             
@@ -327,7 +323,7 @@ export class TimeSlotComponent implements OnInit {
                   slot['userData'] = userData[0]; // Додаємо дані користувача до слота
                   slot.isConfirmed = userData[0].status === 'confirmed'; // Set isConfirmed based on status
                    // Convert startTime to UNIX timestamp and log it
-            
+                   
            // Зберігаємо UNIX timestamp
             
             // Add 3 hours to the createdAt timestamp and remove fractional seconds
@@ -340,7 +336,7 @@ export class TimeSlotComponent implements OnInit {
                   this.http.get<any>(`http://localhost:5258/api/user/get-by-id?id=${userData[0].userId}`).subscribe(
                     (userDetails) => {
                       if (userDetails) {
-                        console.log('Fetched user details:', userDetails); // Лог деталей користувача
+                       //console.log('Fetched user details:', userDetails); // Лог деталей користувача
                         slot.userDetails = {
                           firstName: userDetails.firstName || 'Невідомо',
                           lastName: userDetails.lastName || 'Невідомо',
@@ -360,8 +356,8 @@ export class TimeSlotComponent implements OnInit {
 
                   this.http.get<any>(`http://localhost:5258/api/wallet/get-by-user-id?userId=${userData[0].userId}`).subscribe(
                     (walletData) => {
-                      console.log('Fetched wallet data:', walletData);
-                      console.log('ORACLE----walletadress', walletData.walletAddress);
+                    //  console.log('Fetched wallet data:', walletData);
+                    //  console.log('ORACLE----walletadress', walletData.walletAddress);
                       this.stydentPublicKey=walletData.walletAddress;
                       //console.log(this.stydentPyblicKey) // Log the fetched wallet data
                     },
@@ -387,14 +383,14 @@ export class TimeSlotComponent implements OnInit {
     );
   }
 
-  confirmBooking(bookingId: string, confirmationMessage: string, contactLink: string): void {
+  confirmBooking(bookingId: string, confirmationMessage: string, contactLink: string, unixTimestamp: number): void {
     const requestBody = {
       bookingId,
       confirmationMessage,
       contactLink
     };
 
-    this.confirmMeeting();
+    this.confirmMeeting(unixTimestamp);
 
     this.http.post('http://localhost:5258/api/booking/confirm', requestBody).subscribe(
       (response: any) => {
@@ -402,8 +398,9 @@ export class TimeSlotComponent implements OnInit {
           console.error('Сервер повернув помилку:', response.error);
           alert(`Помилка підтвердження бронювання: ${response.error.message || 'Невідома помилка'}`);
         } else {
+          
           console.log('Бронювання підтверджено:', response);
-          alert('Бронювання успішно підтверджено!');
+       //   alert('Бронювання успішно підтверджено!');
         }
       },
       (error) => {
@@ -411,33 +408,52 @@ export class TimeSlotComponent implements OnInit {
         if (error.status === 500) {
           console.error('Деталі помилки сервера:', error.error); // Лог деталей помилки сервера
         }
-        alert('Все записалося мабуть..');
+       // alert('Все записалося мабуть..');
       }
     );
   }
 
-  openConfirmationDialog(slotId: string): void {
-    const slot = this.timeSlots.find(s => s.id === slotId); // Find the correct slot by its ID
-    if (!slot || !slot.userData) {
-      alert('Неможливо знайти відповідний слот або дані користувача.');
-      return;
+
+
+   async confirmMeeting(unixTimestamp: number) {
+    try {
+      const oracle = new PublicKey(this.oraclePublicKey!);
+      const student = new PublicKey(this.stydentPublicKey);
+      const pda = await this.getBookingPda(student, oracle, unixTimestamp);
+      const data = this.confirmMeetingInstruction(this.passed);
+      console.log('tttttt', unixTimestamp);
+      console.log('PDA', pda.toString());
+
+      const ix = new TransactionInstruction({
+        keys: [
+          { pubkey: oracle, isSigner: true, isWritable: false },
+          { pubkey: pda, isSigner: false, isWritable: true },
+          { pubkey: student, isSigner: false, isWritable: true },
+          { pubkey: new PublicKey(this.oraclePublicKey!), isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+        ],
+        programId: this.programId,
+        data,
+      });
+
+      const tx = new Transaction().add(ix);
+      tx.feePayer = oracle;
+      const { blockhash } = await this.connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+
+      const signed = await window.solana!.signTransaction(tx);
+      const sig = await this.connection.sendRawTransaction(signed.serialize());
+      await this.connection.confirmTransaction(sig, 'confirmed');
+
+      alert('Meeting confirmed! Signature: ' + sig);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        alert('Failed to confirm meeting: ' + err.message);
+      } else {
+        alert('Failed to confirm meeting: ' + String(err));
+      }
     }
-  
-    const bookingId = slot.userData.id; // Use the correct booking ID from userData[0].id
-    console.log('Fetched user data for slot:', bookingId); // Log the booking ID here
-    const confirmationMessage = prompt('Введіть повідомлення для підтвердження:');
-    if (!confirmationMessage) {
-      alert('Повідомлення не може бути порожнім.');
-      return;
-    }
-  
-    const contactLink = prompt('Введіть посилання для контакту:');
-    if (!contactLink) {
-      alert('Посилання не може бути порожнім.');
-      return;
-    }
-  
-    this.confirmBooking(bookingId, confirmationMessage, contactLink);
   }
 
   navigateToUserPage(): void {

@@ -59,7 +59,7 @@ export class CreatebookComponent implements OnInit {
   publicKey: string | null = null;
   //expertPubkey: string = '8qYPSmTT9LFANhLdhNcGLoWX32mg2FfqbraEtBnkEUWU';
   meetingTime: number = 1746952694;
-  amount: number = 0.05;
+  amount: number = 0.000001;
   bookingPda: string | null = null;
   passed: boolean = true;
   private connection = new Connection('https://api.devnet.solana.com', 'confirmed');
