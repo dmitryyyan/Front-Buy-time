@@ -101,6 +101,7 @@ export class TimeSlotComponent implements OnInit {
     oraclePublicKey: string = '';
     stydentPublicKey: string = '';
 
+    unixTimestamp1 = 0; // Додаємо поле unixTimestamp
   private connection = new Connection('https://api.devnet.solana.com', 'confirmed');
   private programId = new PublicKey('4ws28MPExiFotyySaD8Y3wNq3xEa9ZP3Eqbsf9m6fbu8');
 
@@ -135,6 +136,7 @@ export class TimeSlotComponent implements OnInit {
 
 openConfirmationDialog(slotId: string): void {
   const slot = this.timeSlots.find(s => s.id === slotId); 
+  console.log('Slot:', slot); // Лог слота
   if (!slot || !slot.userData) {
     alert('Неможливо знайти відповідний слот або дані користувача.');
     return;
@@ -142,7 +144,8 @@ openConfirmationDialog(slotId: string): void {
   this.http.get<any>(`http://localhost:5258/api/timeslot/get-by-id?id=${slotId}`).subscribe(
     (timeslotDetails) => {
       slot.unixTimestamp = Math.floor(new Date(timeslotDetails[0].startTime).getTime() / 1000);
-      console.log('Slot UNIX timestamp:', slot.unixTimestamp);
+      console.log('Slot UNIX timestamp11:', slot.unixTimestamp);
+      this.unixTimestamp1 = slot.unixTimestamp; // Зберігаємо unixTimestamp
       // Після того як unixTimestamp отримано, викликаємо confirmBooking
       const bookingId = slot.userData.id;
       const confirmationMessage = prompt('Введіть повідомлення для підтвердження:');
@@ -163,7 +166,7 @@ openConfirmationDialog(slotId: string): void {
   );
 }
 
-  fetchChatId(): void {
+fetchChatId(): void {
     this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
       (response) => {
         this.chatId = response.chatId;
@@ -177,7 +180,7 @@ openConfirmationDialog(slotId: string): void {
   }
   // Метод для отримання даних користувача за chatId
 
-   async getBookingPda(student: PublicKey, expert: PublicKey, meetingTime: number): Promise<PublicKey> {
+  async getBookingPda(student: PublicKey, expert: PublicKey, meetingTime: number): Promise<PublicKey> {
     const meetingTimeBuffer = Buffer.alloc(8);
     meetingTimeBuffer.writeInt32LE(Number(meetingTime), 0); 
     const [pda] = await PublicKey.findProgramAddress(
@@ -199,12 +202,44 @@ openConfirmationDialog(slotId: string): void {
   }
     
 
-  async expertCancel() {
+  async expertCancel(slotId: string) {
+
+    
+    const slot = this.timeSlots.find(s => s.id === slotId);
+    if (!slot) {
+      alert('Не знайдено unixTimestamp для цього слота!');
+      return;
+    }
+    // Оновлюємо unixTimestamp перед транзакцією
+    const timeslotDetails = await this.http.get<any>(`http://localhost:5258/api/timeslot/get-by-id?id=${slotId}`).toPromise();
+    slot.unixTimestamp = Math.floor(new Date(timeslotDetails[0].startTime).getTime() / 1000);
+    this.unixTimestamp1 = slot.unixTimestamp;
+    const unixTimestamp = slot.unixTimestamp;
+    const bookingData = {
+      bookingId: slot.userData.id,
+      cancellationMessage: 'Бронювання скасовано експертом'
+    };
+      console.log('Booking data:', bookingData);
+     this.http.post('http://localhost:5258/api/booking/cancel', bookingData).subscribe(
+        (response) => {
+          console.log('Booking canceled:', response);
+          window.location.reload(); // Оновлюємо сторінку після скасування
+        },
+        (error) => {  
+          console.error('Error canceling booking:', error);
+          window.location.reload();
+        }
+      );
     try {
-      const expert = new PublicKey(this.publicKey!);
-      const student = new PublicKey(this.studentPubkey);
-      const pda = new PublicKey(this.bookingPda);
+      const expert = new PublicKey(this.oraclePublicKey);
+      const student = new PublicKey(this.stydentPublicKey);
+      const pda = await this.getBookingPda(student, expert, unixTimestamp);
       const data = this.expertCancelInstruction();
+      console.log('PDA', pda.toString());
+      console.log('UNIX', unixTimestamp);
+      console.log('EXPERT', expert.toString());
+      console.log('STUDENT', student.toString());
+      console.log('66666', this.unixTimestamp1);
 
       const ix = new TransactionInstruction({
         keys: [
@@ -226,7 +261,9 @@ openConfirmationDialog(slotId: string): void {
       const sig = await this.connection.sendRawTransaction(signed.serialize());
       await this.connection.confirmTransaction(sig, 'confirmed');
 
-    alert('Booking canceled! Signature: ' + sig);
+     
+
+      alert('Booking canceled! Signature: ' + sig);
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
@@ -323,7 +360,7 @@ openConfirmationDialog(slotId: string): void {
                   slot['userData'] = userData[0]; // Додаємо дані користувача до слота
                   slot.isConfirmed = userData[0].status === 'confirmed'; // Set isConfirmed based on status
                    // Convert startTime to UNIX timestamp and log it
-                   
+                  //this.unixTimestamp1 = Math.floor(new Date(userData[0].createdAt).getTime() / 1000); // Конвертуємо в UNIX timestamp
            // Зберігаємо UNIX timestamp
             
             // Add 3 hours to the createdAt timestamp and remove fractional seconds
@@ -398,24 +435,21 @@ openConfirmationDialog(slotId: string): void {
           console.error('Сервер повернув помилку:', response.error);
           alert(`Помилка підтвердження бронювання: ${response.error.message || 'Невідома помилка'}`);
         } else {
-          
           console.log('Бронювання підтверджено:', response);
-       //   alert('Бронювання успішно підтверджено!');
+          window.location.reload(); // Оновлюємо сторінку після підтвердження
         }
       },
       (error) => {
-       
         if (error.status === 500) {
           console.error('Деталі помилки сервера:', error.error); // Лог деталей помилки сервера
         }
-       // alert('Все записалося мабуть..');
       }
     );
   }
 
 
 
-   async confirmMeeting(unixTimestamp: number) {
+  async confirmMeeting(unixTimestamp: number) {
     try {
       const oracle = new PublicKey(this.oraclePublicKey!);
       const student = new PublicKey(this.stydentPublicKey);

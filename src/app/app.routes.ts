@@ -12,9 +12,10 @@ import { CryptoPaymentComponent } from './pages/crypto-payment/crypto-payment.co
 import { TimeSlotComponent } from './pages/time-slot/time-slot.component';
 //import { ContractInteractionComponent } from './pages/contract-interaction/contract-interaction.component';
 import { ConnectWalletComponent } from './pages/connect-wallet/connect-wallet.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
-  { path: '', component: CreatebookComponent, pathMatch: 'full' },
+  { path: '', component: UserPageComponent, pathMatch: 'full' },
   { path: 'user-page', component: UserPageComponent },
   { path: 'new-page', component: NewPageComponent },
   { path: 'teacher', component: TeacherComponent },
@@ -28,4 +29,5 @@ export const routes: Routes = [
   { path: 'time-slot', component: TimeSlotComponent },
  // { path: 'contract-interaction', component: ContractInteractionComponent },
   { path: 'connect-wallet', component: ConnectWalletComponent },
+  { path: 'register', component: RegisterComponent },
 ];

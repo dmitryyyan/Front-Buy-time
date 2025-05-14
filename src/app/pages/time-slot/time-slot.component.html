@@ -26,6 +26,13 @@
             (click)="openConfirmationDialog(slot.id)">
             Confirm book
           </button>
+
+          <button
+             class="cancel-book-button"
+            *ngIf="!slot.isConfirmed"
+            (click)="expertCancel(slot.id)">
+  Cancel book
+          </button>
           <ng-template #noData>
             <p><strong>No data about userss.</strong></p>
           </ng-template>

@@ -140,6 +140,22 @@ body {
   background-color: #218838;
 }
 
+.cancel-book-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: white;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cancel-book-button:hover {
+  background-color: #218838;
+}
 .no-user-data {
   text-align: center;
   font-size: 16px;

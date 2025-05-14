@@ -105,7 +105,6 @@ export class UserPageComponent implements OnInit {
     }
     this.http.get<UserData>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`).subscribe(
       (data) => {
-        console.log('Fetched user data:', data); // Log the fetched data
         if (data && !data.message) {
           this.userData = data; // Зберігаємо отримані дані користувача
           this.userForm.patchValue({ isTeacher: data.isTeacher }, { emitEvent: false }); // Set the checkbox value without emitting event
@@ -137,10 +136,12 @@ export class UserPageComponent implements OnInit {
           );
         } else {
           console.log('No user data available');
+          this.router.navigate(['/register']); // Перенаправлення на сторінку реєстрації
         }
       },
       (error) => {
         console.error('Error fetching user data', error);
+        this.router.navigate(['/register']); // Перенаправлення на сторінку реєстрації у разі помилки
       }
     );
   }
