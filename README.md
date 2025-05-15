@@ -1,96 +1,96 @@
 
 # BuyTime
 
-Даний проект розрахований на студентів та експертів, які будуть надавати відповідні послуги студентам, такі як консультації, проводити заплановані урокі для розяснення, або надання нового матеріалу. Експерти будуть отримувати кошти від наданих послуг за допомого інтеграції **Solana**, це буде відбуватися в форматі при бронюванні часу студентом студент платить з крипто гаманця суму яку визначив експерт для зустрічі, далі експерт отриму ці кошти після по ведення консультації з урахуванням комісії. Наданий час проект планується розгортати в Telegram за домогою **API telegram**.
-![Logo](\Screen\logo.jpg)
+This project is designed for students and experts who will provide relevant services to students, such as consultations, conducting scheduled lessons for clarification, or providing new material. Experts will receive funds from the services provided using the **Solana** integration, this will happen in the format when booking a time by a student, the student pays from a crypto wallet the amount determined by the expert for the meeting, then the expert will receive these funds after conducting a consultation, taking into account the commission. The project is planned to be deployed in Telegram using the **API telegram**
+![Logo](/Screen/logo.jpg)
 
 
 ## Run Locally
 
-Для запуску проекту потрібно виконати певну послідовність дій оскільки він ще не розгорнутий на хост сервісах.
+To run the project, you need to perform a certain sequence of actions after it is not deployed on the host services.
 
-  ### _Першим кроком буде запуск FrontEnd частини, нижще наведено послідовність кроків Середовище використане для запуску VS Code_
+### _The first step will be to start the FrontEnd part, below is the sequence of steps Environment used to run VS Code_
 
 
   Clone the project for FrontEnd
   ```bash 
     git clone 
   ```
-  Запуск Angular частини
+  Running Angular part
   ```bash 
     ng serve
   ```
   ```bash 
     node server.js
   ```
-  Далі через ngrok робимо тимчасовий хост для подальшого розготрання його в telegram за    домогою боту
+  Next, we create a temporary host using ngrok for further development in Telegram using the bot.
   ```bash 
     ngrok http localhost:4200
   ```
   ![App Screenshot](/Screen/1.png)
 
-  ### _Наступний крок розгортання BackEnd частини дана дія виконується в іншому проекті      оскільки FrontEnd і BackEnd створені в різних репозиторіях для більшої гнучкості_
+ ### _The next step of deploying BackEnd parts is now performed in other projects after FrontEnd and BackEnd, created in different repositories for more flexibility_
 
   
   Clone the project for BackEnd
   ```bash 
   git clone 
   ```
-  Команди для запуску
+  Commands to run
   ```bash 
   cd BuyTime_Api
   ```
   ```bash 
   dotnet run  
   ```
-  Після даних команд, BackEnd частина буде розгорнута для перевірки її роботи   
-  можна виконистати [Swagger](http://localhost:5258/swagger/index.html) (необов'язково)
+  After these commands, the BackEnd part will be deployed to check its operation
+you can use [Swagger](http://localhost:5258/swagger/index.html) (optional)
 
- ### _Фінальний крок запуск в телеграм_
- #### Для розгортання в телеграм потрібно створи бот в [BotFather](https://t.me/BotFather)
+### _Final step launch in Telegram_
+#### To deploy in Telegram you need to create a bot in [BotFather](https://t.me/BotFather)
   
-  Команди для створення 
-  ```bash 
-  /newbot
-  ```
-  Далі пишемо ім'я приклад:
-  ```bash 
-  test01_bot
-  ```
-  Після чого отримаємо HTTP API  приклад:
-  ```bash 
-  7719003108:AAEedzjfYRwozyQSphOvUlgYafd6A-qma
-  ```
-  HTTP API потрібно втавити в код server.js в 13 рядок 
-  ![App Screenshot](/Screen/3.png)
- #### Коли бот створено можемо перейти до створення кнопкі яка буде запускати в боті наш застосунок це також виконується в [BotFather](https://t.me/BotFather)
+ Commands for creation
+    ```bash
+    /newbot
+    ```
+    Next, we write the name example:
+    ```bash
+    test01_bot
+    ```
+    After that, we will get the HTTP API example:
+    ```bash
+    7719003108:AAEedzjfYRwozyQSphOvUlgYafd6A-qma
+    ```
+    The HTTP API must be inserted into the server.js code in line 13
+    ![App Screenshot](/Screen/3.png)
+#### When the bot is created, we can proceed to creating a button that will launch our application in the bot, this is also done in [BotFather](https://t.me/BotFather)
 
   ```bash 
   /setmenubutton
   ```
-  Обираємо наш бот приклад
-  ```bash 
-  test01_bot
-  ```
-  Потрібно втавити посилання на наш застосунок який був розгорнутий за до помогою ngrok
-  ```bash 
-  https://e657-45-151-237-169.ngrok-free.app
-  ```
-  Пишемо назву для для відображення кнопки
-  ```bash 
-  my_app
-  ```
-  Для перевірки переходимо в бот та можемо побачіти кнопку входу в застосунок
-  ![App Screenshot](/Screen/2.png)
+  We select our bot example
+    ```bash
+    test01_bot
+    ```
+    We need to insert a link to our application that was deployed using ngrok
+    ```bash
+    https://e657-45-151-237-169.ngrok-free.app
+    ```
+    We write the name for the button to display
+    ```bash
+    my_app
+    ```
+    To check, we go to the bot and we can see the login button in the application
+    ![App Screenshot](/Screen/2.png)
 
-####  Для роботи кнопки порібно виконати останню інструкцію 
-  Перейти в проект FrontEnd частини та знайти файл **angular.json** і замінити посилання в рядку 58 на ваше з ngrok але в форматі `e657-45-151-237-169.ngrok-free.app`
-  
-  Після чого перезапустити команду 
-  ```bash 
-  ng serve
-  ```
-  Тепер проект має змогу відкритися в телеграм по створеній кнопці.
+#### For the button to work, you need to follow the last instruction
+Go to the FrontEnd project and find the file **angular.json** and replace the link in line 58 with yours from ngrok but in the format `e657-45-151-237-169.ngrok-free.app`
+
+Then restart the command
+```bash
+ng serve
+```
+Now the project can open in Telegram using the created button.
 
 
   
@@ -98,9 +98,10 @@
 
 ## Solana Integration
 
-В даному проекті для оплати послуг використовується крипто-валюта Solana для того щоб користувач мав змогу оплачувати і приймати кошти він мусить мати гаманець наприклад Phantom та підключіти його в додатку на сторінці профіль після чого він матиме змогу успішно створювати трансакції.
+In this project, the Solana cryptocurrency is used to pay for services. In order for the user to be able to pay and receive funds, he must have a wallet, for example Phantom, and connect it in the application on the profile page, after which he will be able to successfully create transactions.
 
-Що до інтеграції Solana нами був створений смарт контракт на Rust та задеплоєний на тестову мережу devnet для змогі тестово перевіряти роботу. Що до смарт контракту в ньому створений функціонал броні ввільного часу експерта після чого знімається за це плата в студента і утримується до підтвердження експертом якщо яксперт підтверджує зустріч то він отримує кошти або якщо непідтверджує то кошти повертаються студенту на гаманець, також створена можливість що може скасувати студент і йому певернеться частина коштів взалежності за скількі часу до зустрічі він скасував.
+Regarding the Solana integration, we created a smart contract on Rust and deployed it to the devnet test network to be able to test the work. Regarding the smart contract, it created a functionality for booking an expert's free time, after which the fee is charged to the student and held until confirmed by the expert. If the expert confirms the meeting, he receives the funds or if he does not confirm, the funds are returned to the student's wallet. There is also an opportunity for the student to cancel and part of the funds will be returned to him depending on how much time before the meeting he canceled.
+
 
 ## Demo
 
