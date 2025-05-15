@@ -107,29 +107,31 @@ Regarding the Solana integration, we created a smart contract on Rust and deploy
 
 ## Demo
 
-Insert gif or link to demo
+The application interface can be viewed in this video
 
+[🎥 application interface ](https://drive.google.com/file/d/1k-m1KD-DYdT4yMiVaNrZ-5GBRA9KGdck/view?usp=sharing)
 
-## Related
+Working with payments in the app
 
-Here are some related projects
-
-[Awesome README](https://github.com/matiassingers/awesome-readme)
-
+[🎥 payments](https://drive.google.com/file/d/16KxatXZR0o-bMmQBjSQQtYoHyaW7LcnM/view?usp=sharingw)
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+| ![](/Screen/11.png) | ![](/Screen/12.png) | ![](/Screen/13.png) |
+|:-------------:|:-------------:|:-------------:|
+
 
 
 ## Tech Stack
 
-**Client:** React, Redux, TailwindCSS
+**Client:** Angular, TypeScript
 
-**Server:** Node, Express
+**Server:** Node.js
 
 
 ## Authors
 
-- [@octokatherine](https://www.github.com/octokatherine)
-
+- [@Vanyk](https://github.com/vanuk)
+- [@Jeweler228](https://github.com/OlexandrNikolaiev) 
+- [@Macsym](https://github.com/maxf2)
