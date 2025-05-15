@@ -2,7 +2,9 @@
 # BuyTime
 
 This project is designed for students and experts who will provide relevant services to students, such as consultations, conducting scheduled lessons for clarification, or providing new material. Experts will receive funds from the services provided using the **Solana** integration, this will happen in the format when booking a time by a student, the student pays from a crypto wallet the amount determined by the expert for the meeting, then the expert will receive these funds after conducting a consultation, taking into account the commission. The project is planned to be deployed in Telegram using the **API telegram**
-![Logo](/Screen/logo.jpg)
+<p align="center">
+  <img src="Screen/logo.jpg" alt="Logo" width="300" height="200">
+</p>
 
 
 ## Run Locally
