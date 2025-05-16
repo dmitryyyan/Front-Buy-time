@@ -1,0 +1,164 @@
+.page-container {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  position: relative;
+  padding: 5%;
+  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
+  border-radius: 0px;
+  margin: 0;
+  color: #fff;
+  padding-bottom: 50%;
+}
+
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../../../../lion.png') no-repeat center center fixed; /* Background image from the specified folder */
+  background-size: cover;
+  opacity: 0.2; /* Make the image semi-transparent */
+  z-index: -1; /* Place it behind the content */
+}
+
+/* Основний стиль */
+.user-container {
+  padding: 20px;
+}
+
+.user-container h2 {
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: #fff;
+}
+
+.user-container p {
+  margin: 5px 0;
+  font-size: 1.2em;
+}
+
+.timeslot-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.timeslot-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  background-color: #006ab6; /* Світло-синій, підходить для університетського стилю */
+}
+
+.timeslot-item p {
+  margin: 5px 0;
+  font-size: 1.1em;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 97%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5); /* Темне напівпрозоре фонове забарвлення */
+}
+
+button {
+  flex: 1;
+  margin: 5px;
+  padding: 10px 0;
+  font-size: 16px;
+  background-color: #00aaff; /* Акцентний колір, світло-блакитний */
+  color: white;
+  border: none;
+  border-radius: 5px; /* Додаємо округлення кнопок */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкий тіньовий ефект */
+}
+
+button i {
+  margin-right: 8px;
+}
+
+button:hover {
+  background-color: #0088cc; /* Трохи темніший відтінок для hover */
+}
+
+.add-timeslot-button {
+
+  font-size: 16px;
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  z-index: 1000; /* Залишаємо кнопку зверху */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкий тіньовий ефект */
+}
+
+.add-timeslot-button i {
+  margin-right: 8px;
+}
+
+.add-timeslot-button:hover {
+  background-color: #0056b3;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.wallet-container {
+ 
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 85%;
+  margin-top: 0%;
+  text-size-adjust: 0.9em;
+  font-size: 0.8em;
+}
+
+
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 2%;
+    padding-bottom: 70%;
+  }
+
+  .user-container h2 {
+    font-size: 1.6em;
+  }
+
+  .user-container p {
+    font-size: 1em;
+  }
+
+  button {
+    font-size: 18px;
+    padding: 17px 0;
+  }
+
+  .add-timeslot-button,
+  .view-timeslots-button,
+  .view-bookings-button {
+    font-size: 12px;
+    padding: 20px 12px;
+  }
+}
+
+

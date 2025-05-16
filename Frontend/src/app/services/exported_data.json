@@ -1,0 +1,112 @@
+[
+  {
+    "Id": "87C5E8D4-7017-4983-99AC-0B591450B743",
+    "FirstName": "Дмитро",
+    "LastName": "Сидоренко",
+    "Role": "teacher",
+    "Email": "dmytro.sydorenko@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "F65014F5-6BB0-4910-939B-3AAE228CF5C6",
+    "FirstName": "Павло",
+    "LastName": "Мельник",
+    "Role": "teacher",
+    "Email": "pavlo.melnik@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "AF180268-B3CD-4731-83B0-3AE144F35A43",
+    "FirstName": "Андрій",
+    "LastName": "Коваленко",
+    "Role": "teacher",
+    "Email": "andriy.kovalenko@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "C09727CC-3E85-4DF4-A539-44D2C4C20B04",
+    "FirstName": "Юлія",
+    "LastName": "Бойко",
+    "Role": "student",
+    "Email": "yulia.boyko@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "231363D4-5AC6-4E9D-B0C8-54BC41053EF6",
+    "FirstName": "Наталія",
+    "LastName": "Петренко",
+    "Role": "student",
+    "Email": "natalia.petrenko@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "B8293F14-ABA8-4605-AC36-618B70DC0BEC",
+    "FirstName": "Марина",
+    "LastName": "Данилова",
+    "Role": "teacher",
+    "Email": "marina.danilova@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "EE091843-AB0B-4365-8F43-9F872BA1FF7E",
+    "FirstName": "Анна",
+    "LastName": "Левченко",
+    "Role": "student",
+    "Email": "anna.levchenko@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "BA7320AF-ABAD-49EA-83A5-A0AF37379A7C",
+    "FirstName": "Тарас",
+    "LastName": "Гончаренко",
+    "Role": "student",
+    "Email": "taras.goncharenko@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "D6F249A5-23E7-4B83-9B0C-CE9A9E9CD5E8",
+    "FirstName": "Ольга",
+    "LastName": "Іванова",
+    "Role": "student",
+    "Email": "olga.ivanova@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  },
+  {
+    "Id": "FCC72882-5FBF-425F-B1F6-D3803C07DCC4",
+    "FirstName": "Іван",
+    "LastName": "Шевченко",
+    "Role": "student",
+    "Email": "ivan.sh@example.com",
+    "Description": null,
+    "Rating": null,
+    "Tags": null,
+    "TelegramChatId": null
+  }
+]
