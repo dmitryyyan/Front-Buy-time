@@ -1,0 +1,3 @@
+[submodule "BuyTime-SmartContract"]
+	path = BuyTime-SmartContract
+	url = https://github.com/OlexandrNikolaiev/BuyTime-SmartContract.git
