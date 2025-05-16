@@ -1,7 +1,7 @@
 
 # BuyTime
 
-This project is designed for students and experts who will provide relevant services to students, such as consultations, conducting scheduled lessons for clarification, or providing new material. Experts will receive funds from the services provided using the **Solana** integration, this will happen in the format when booking a time by a student, the student pays from a crypto wallet the amount determined by the expert for the meeting, then the expert will receive these funds after conducting a consultation, taking into account the commission. The project is planned to be deployed in Telegram using the **API telegram**
+This project connects students with experts for services like one-on-one consultations, scheduled review sessions, or the delivery of new course material. Experts set their own fees, and when a student books a session, the payment is transferred from their crypto wallet into a Solana-based escrow account managed by a smart contract. Once the consultation is successfully completed, the funds — minus a small commission — are released from escrow to the expert. The entire system will run as a Telegram Mini App.
 <p align="center">
   <img src="Screen/logo.jpg" alt="Logo" width="300" height="200">
 </p>
@@ -9,15 +9,23 @@ This project is designed for students and experts who will provide relevant serv
 
 ## Run Locally
 
-To run the project, you need to perform a certain sequence of actions after it is not deployed on the host services.
+To run the project, you need to perform a certain sequence of actions, as it is not deployed on host services.
 
 ### _The first step will be to start the FrontEnd part, below is the sequence of steps Environment used to run VS Code_
 
 
+ 
   Clone the project for FrontEnd
   ```bash 
-    git clone 
+    git clone https://github.com/vanuk/buy-time.git
   ```
+  Installing dependencies
+  ```bash 
+    npm install
+    npm install @angular/cdk  
+    
+  ```
+  
   Running Angular part
   ```bash 
     ng serve
@@ -36,7 +44,7 @@ To run the project, you need to perform a certain sequence of actions after it i
   
   Clone the project for BackEnd
   ```bash 
-  git clone 
+  git clone https://github.com/zhukovskyy/BuyTime.git
   ```
   Commands to run
   ```bash 
