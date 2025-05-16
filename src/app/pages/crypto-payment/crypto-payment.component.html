@@ -1,8 +1,0 @@
-<div>
-  <h1>Crypto Payment</h1>
-  <button (click)="connectWallet()">Connect Phantom Wallet</button>
-  <div *ngIf="walletAddress">
-    <p>Connected Wallet: {{ walletAddress }}</p>
-    <button (click)="makePayment()">Pay with Solana</button>
-  </div>
-</div>
