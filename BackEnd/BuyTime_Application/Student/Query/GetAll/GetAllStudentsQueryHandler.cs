@@ -1,0 +1,27 @@
+using BuyTime_Application.Common.Interfaces.IUnitOfWork;
+using BuyTime_Application.Dto;
+using ErrorOr;
+using Mapster;
+using MediatR;
+
+namespace BuyTime_Application.Student.Query.GetAll;
+
+public class GetAllStudentsQueryHandler(IUnitOfWork unitOfWork)
+    : IRequestHandler<GetAllStudentsQuery, ErrorOr<IEnumerable<UserDto>>>
+{
+    public async Task<ErrorOr<IEnumerable<UserDto>>> Handle(GetAllStudentsQuery request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var students = await unitOfWork.User.GetAllStudentsAsync();
+            
+            var studentDtos = students.Value.Adapt<List<UserDto>>();
+
+            return studentDtos;
+        }
+        catch (Exception ex)
+        {
+            return Error.Failure($"Error while retrieving students: {ex.Message}");
+        }
+    }
+}
