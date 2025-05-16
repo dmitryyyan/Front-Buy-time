@@ -1,3 +1,6 @@
 [submodule "BuyTime-SmartContract"]
 	path = BuyTime-SmartContract
 	url = https://github.com/OlexandrNikolaiev/BuyTime-SmartContract.git
+[submodule "BuyTime"]
+	path = BuyTime
+	url = https://github.com/zhukovskyy/BuyTime.git
