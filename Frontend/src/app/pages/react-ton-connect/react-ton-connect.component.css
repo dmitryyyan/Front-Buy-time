@@ -1,0 +1,78 @@
+/* Контейнер */
+.connect-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: radial-gradient(circle at top left, #1e3c72, #2a5298, #1e3c72);
+    animation: gradientMove 10s ease infinite alternate;
+}
+
+/* Анімація фону */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Картка */
+.connect-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 100%;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #fff;
+    transition: transform 0.3s;
+}
+
+.connect-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Заголовок */
+.connect-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* Опис */
+.connect-description {
+    font-size: 1rem;
+    color: #ddd;
+    margin-bottom: 24px;
+}
+
+/* Обгортка кнопки TonConnect */
+.ton-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Кнопка Назад */
+.back-button {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}

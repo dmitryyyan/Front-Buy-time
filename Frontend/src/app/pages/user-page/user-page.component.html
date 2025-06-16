@@ -1,70 +1,164 @@
-<div class="page-container">
+<!-- index.html head -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  crossorigin="anonymous"
+/>
 
- 
+<!-- index.html head -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  crossorigin="anonymous"
+/>
 
-  <div *ngIf="userData" class="user-data">
+<body>
+  <div class="wrapper">
+    <div
+      class="page-container"
+      role="main"
+      aria-label="Розділ профілю користувача"
+    >
+      <!-- userData відсутній -->
+      <div
+        *ngIf="!userData"
+        class="user-data no-user-data"
+        aria-label="Порожній профіль"
+      >
+        <div class="ton-button-wrapper">
+          <button
+            class="ton-connect-button"
+            (click)="openInNewTab()"
+            aria-label="Підключити ТОН гаманець"
+          >
+            <i class="fas fa-wallet"></i> Підключити ТОН гаманець
+          </button>
+        </div>
+        <h1>Немає даних користувача</h1>
+        <p>
+          Ми не змогли завантажити інформацію. Спробуйте пізніше або перевірте
+          з'єднання.
+        </p>
+      </div>
 
-  <div class="wallet-container">
-    <div *ngIf="isWalletConnected; else showConnectButton" class="wallet-info">
-      <p><strong>Wallet connected</strong> {{ walletAddress }}</p>
+      <!-- userData є -->
+      <!-- Профіль користувача -->
+      <div
+        *ngIf="userData"
+        class="user-card"
+        aria-labelledby="user-data-heading"
+      >
+        <div class="ton-button-wrapper">
+          <button
+            class="ton-connect-button"
+            (click)="openInNewTab()"
+            aria-label="Підключити ТОН гаманець"
+          >
+            <i class="fas fa-wallet"></i> Підключити ТОН гаманець
+          </button>
+        </div>
+
+        <h2 id="user-data-heading" class="user-card-title">Профіль</h2>
+
+        <div class="user-info-grid">
+          <div class="user-info-item">
+            <span class="label">👤 Ім’я:</span>
+            <span class="value"
+              >{{ userData.firstName }} {{ userData.lastName }}</span
+            >
+          </div>
+          <div class="user-info-item">
+            <span class="label">📧 Email:</span>
+            <span class="value">{{ userData.email }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">🏷️ Нікнейм:</span>
+            <span class="value">{{ userData.teacherNickname }}</span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">📝 Опис:</span>
+            <span class="value">{{ userData.description }}</span>
+          </div>
+
+          <div class="user-info-item" *ngIf="userData.isTeacher">
+            <span class="label">🦁 Рейтинг:</span>
+            <span
+              class="value"
+              [innerHTML]="getLionEmojis(userData.rating)"
+            ></span>
+          </div>
+          <div class="user-info-item">
+            <span class="label">🎓 Експерт:</span>
+            <span class="value">{{ userData.isTeacher ? "Так" : "Ні" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Форма -->
+      <form
+        [formGroup]="userForm"
+        class="glass-form"
+        aria-label="Форма користувача"
+      >
+        <div>
+          <label for="isTeacherCheckbox">
+            <input
+              id="isTeacherCheckbox"
+              type="checkbox"
+              formControlName="isTeacher"
+              (change)="submitUser()"
+              aria-describedby="expertDesc"
+            />
+            Ви експерт?
+          </label>
+          <small id="expertDesc">
+            Позначте, якщо бажаєте проводити заняття або консультації.
+          </small>
+        </div>
+
+        <div class="button-group">
+          <button type="button" (click)="navigateToAddTimeslotPage()">
+            <i class="fas fa-plus-circle"></i> Додати слот часу
+          </button>
+          <button type="button" (click)="navigateToViewTimeslots()">
+            <i class="fas fa-calendar-alt"></i> Переглянути слоти
+          </button>
+          <button type="button" (click)="navigateToViewBookings()">
+            <i class="fas fa-book"></i> Переглянути бронювання
+          </button>
+          <button type="button" (click)="navigateToViewTimeslot1()">
+            <i class="fas fa-calendar-check"></i> Слоти для бронювання
+          </button>
+        </div>
+      </form>
     </div>
-    <ng-template #showConnectButton>
-      <button (click)="connectWallet()">Connect your wallet</button>
-    </ng-template>
   </div>
 
-    <h1>User data:</h1>
-    <p><strong>Name:</strong> {{ userData.firstName }} {{ userData.lastName }}</p>
-    <p><strong>Email:</strong> {{ userData.email }}</p>
-    <p><strong>Nickname:</strong> {{ userData.teacherNickname }}</p>
-    <p><strong>Description:</strong> {{ userData.description }}</p>
-    <p><strong>Tegs:</strong> {{ userData.tags }}</p>
-    <p *ngIf="userData.isTeacher">
-      <strong>Rating:</strong>
-      <span [innerHTML]="getLionEmojis(userData.rating)"></span>
-    </p>
-    <p><strong>Expert:</strong> {{ userData.isTeacher ? 'Так' : 'Ні' }}</p>
+  <!-- Завжди фіксована нижня навігація -->
+  <div class="bottom-nav" aria-label="Навігаційна панель">
+    <button (click)="button1Action()">
+      <i class="fas fa-search"></i><span>Пошук</span>
+    </button>
+    <button (click)="button2Action()">
+      <i class="fas fa-calendar-alt"></i><span>Забронювати</span>
+    </button>
+    <button (click)="button3Action()">
+      <i class="fas fa-cog"></i><span>Запис</span>
+    </button>
+    <button (click)="navigateToUserPage()">
+      <i class="fas fa-user"></i><span>Профіль</span>
+    </button>
   </div>
-
-  <div *ngIf="!userData" class="no-user-data">
-    <p>no data user.</p>
-  </div>
-
-  <form [formGroup]="userForm" class="glass-form">
-    <div>
-      <label>
-        <input type="checkbox" formControlName="isTeacher" (change)="submitUser()" /> You is expert?
-      </label>
-    </div>
-    <div class="button-group">
-      <button type="button" class="add-timeslot-button" (click)="navigateToAddTimeslotPage()">
-        <i class="fas fa-plus-circle"></i> Add time slot
-      </button>
-      <button type="button" class="view-timeslots-button" (click)="navigateToViewTimeslots()">
-        <i class="fas fa-calendar-alt"></i> View created time slots
-      </button>
-      <button type="button" class="view-bookings-button" (click)="navigateToViewBookings()">
-        <i class="fas fa-book"></i> View bookings
-      </button>
-
-      <button type="button" class="view-timeslots-button" (click)="navigateToViewTimeslot1()">
-        <i class="fas fa-calendar-alt"></i> Booking time slots
-      </button>
-
-    </div>
-    <div class="button-container">
-      <button (click)="button1Action()">
-        <i class="fas fa-search"></i>🔍
-      </button>
-      <button (click)="button2Action()">
-        <i class="fas fa-info-circle"></i>📅
-      </button>
-      <button (click)="button3Action()">
-        <i class="fas fa-cog"></i> 📖
-      </button>
-      <button (click)="navigateToUserPage()">
-        <i class="fas fa-user"></i> 👤
-      </button>
-    </div>
-  </form>
-</div>
+</body>

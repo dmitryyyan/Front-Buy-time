@@ -1,21 +1,73 @@
+<!-- Шрифти та іконки -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  rel="stylesheet"
+/>
 
-<div class="page-container">
-  <button class="back-button" (click)="navigateToUserPage()">Назад</button>
-  <div *ngIf="!userData" class="no-user-data">
-    <p>No data.</p>
-  </div>
-  <div class="user-container">
-    <br>
-    <h2>Your time slot</h2>
-    <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
-      <li *ngFor="let slot of timeSlots" class="timeslot-item">
-        <p><strong>Start time:</strong> {{ slot.startTime || 'N/A'}}</p>
-        <p><strong>Finish time:</strong> {{ slot.endTime || 'N/A'}}</p>
-        <p><strong>Active:</strong> {{ slot.isAvailable ? 'так' : 'ні' }}</p>
-      </li>
-    </ul>
-    <div *ngIf="timeSlots.length === 0">
-      <p>No time slots available.</p>
+<!-- Компонент -->
+<body>
+  <div class="wrapper">
+    <!-- Кнопка Назад -->
+    <!-- Кнопка назад (фіксована) -->
+    <div class="back-button-fixed">
+      <button class="back-button" (click)="navigateToUserPage()">
+        <i class="fas fa-arrow-left"></i> Назад
+      </button>
+    </div>
+
+    <div class="page-container" role="main">
+      <h1>Ваші слоти</h1>
+
+      <div *ngIf="!userData" class="no-user-data">
+        <p>Дані відсутні.</p>
+      </div>
+
+      <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
+        <li *ngFor="let slot of timeSlots" class="timeslot-item booking-form">
+          <div class="form-group">
+            <label>Початок:</label>
+            <input type="text" [value]="slot.startTime || '—'" readonly />
+          </div>
+          <div class="form-group">
+            <label>Кінець:</label>
+            <input type="text" [value]="slot.endTime || '—'" readonly />
+          </div>
+          <div class="form-group">
+            <label>Активний:</label>
+            <input
+              type="text"
+              [value]="slot.isAvailable ? 'Так' : 'Ні'"
+              readonly
+            />
+          </div>
+        </li>
+      </ul>
+
+      <div *ngIf="timeSlots.length === 0" class="no-user-data">
+        <p>Слотів часу немає.</p>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Фіксована нижня навігація -->
+  <div class="bottom-nav">
+    <button (click)="button1Action()">
+      <i class="fas fa-search"></i><span>Пошук</span>
+    </button>
+    <button (click)="button2Action()">
+      <i class="fas fa-calendar-alt"></i><span>Забронювати</span>
+    </button>
+    <button (click)="button3Action()">
+      <i class="fas fa-cog"></i><span>Запис</span>
+    </button>
+    <button (click)="navigateToUserPage()">
+      <i class="fas fa-user"></i><span>Профіль</span>
+    </button>
+  </div>
+</body>

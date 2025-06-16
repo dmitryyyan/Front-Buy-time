@@ -14,6 +14,7 @@ import {
 } from '@solana/web3.js';
 import { Buffer } from 'buffer';
 
+
 declare global {
   interface Window {
     solana?: {
@@ -182,7 +183,7 @@ export class CreatebookComponent implements OnInit {
   navigateToUserPage() {
     this.router.navigate(['/user-page']);
   }
-
+ 
   ngOnInit(): void {
     this.loadTeachers();
     this.fetchChatId();

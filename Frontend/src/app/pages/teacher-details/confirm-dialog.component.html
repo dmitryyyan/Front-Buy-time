@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Оплата</h2>
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+  <div class="wallet-hint">
+    <b>ℹ️ Підказка:</b> Після натискання <b>«Оплатити»</b> у вас відкриється
+    Telegram Wallet.<br />
+    <b
+      >Підтвердіть оплату у гаманці, а потім поверніться до цього застосунку для
+      завершення бронювання.</b
+    >
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Скасувати</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onPay()"
+    [disabled]="loading"
+  >
+    <span *ngIf="!loading">Оплатити</span>
+    <span *ngIf="loading">Очікуйте...</span>
+  </button>
+</mat-dialog-actions>

@@ -76,6 +76,10 @@ export class UserPageComponent implements OnInit {
   button3Action() {
      this.router.navigate(['/createbook']);
   }
+  openInNewTab() {
+    this.router.navigate(['/react-ton-connect']);
+  }
+
 
   navigateToUserPage() {
     this.router.navigate(['/user-page']);

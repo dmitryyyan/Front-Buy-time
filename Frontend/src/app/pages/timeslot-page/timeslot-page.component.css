@@ -1,92 +1,191 @@
-.page-container {
+/* === Загальні стилі === */
+html,
+body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  color: #fff;
-  position: relative;
-  padding: 5%;
-  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
-  border-radius: 0px;
-  margin: 0;
-  color: #fff;
-  padding-bottom: 50%;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  color: #e2e8f0;
 }
 
-.page-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
+/* === Обгортка === */
+.wrapper {
+  padding-top: 80px;
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* === Контейнер сторінки === */
+.page-container {
+  max-width: 768px;
   width: 100%;
-  height: 100%;
-  background: url('../../../../lion.png') no-repeat center center fixed; /* Background image from the specified folder */
-  background-size: cover;
-  opacity: 0.2; /* Make the image semi-transparent */
-  z-index: -1; /* Place it behind the content */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  border-radius: 20px;
+  padding: 32px 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+}
+
+h1,
+h2,
+.section-title {
+  font-size: clamp(22px, 5vw, 30px);
+  text-align: center;
+  color: #f1f5f9;
+  margin-bottom: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* === Кнопка Назад === */
+.back-button-fixed {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 2000;
 }
 
 .back-button {
-  position: absolute;
-  top: 10px;
-  left: 4%;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #00aaff; /* Light blue button */
-  color: white; /* White text */
-  border: none;
-  border-radius: 5px;
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.2);
+  padding: 10px 16px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .back-button:hover {
-  background-color: #0088cc; /* Darker blue on hover */
+  background: rgba(96, 165, 250, 0.3);
+  transform: translateY(-2px);
+  color: #bfdbfe;
 }
 
-.user-container {
-  padding: 20px;
-}
-
-.user-container h2 {
-  margin-bottom: 20px;
-  font-size: 2em;
-  color: #fff;
-}
-
-.user-container p {
-  margin: 5px 0;
-  font-size: 1.2em;
-}
-
-.timeslot-list {
-  list-style-type: none;
-  padding: 0;
-}
-
+/* === Блоки бронювань / слотів === */
+.booking-form,
 .timeslot-item {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #3a3a3a;
-  border-radius: 5px;
-  background-color: #2a78af; /* Світло-синій, підходить для університетського стилю */
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
 }
 
-.timeslot-item p {
-  margin: 5px 0;
-  font-size: 1.1em;
+/* === Групи полів === */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
 }
 
-@media (max-width: 768px) {
-  .page-container {
-    padding: 2%;
-    padding-bottom: 70%;
+.form-group label {
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.form-group input,
+.form-group textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 12px;
+  color: #f8fafc;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #93c5fd;
+}
+
+/* === Порожній стан === */
+.no-user-data {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  text-align: center;
+  font-size: 16px;
+  color: #f8fafc;
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  margin-top: 32px;
+}
+
+/* === Нижня навігація === */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(59, 130, 246, 0.2);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  padding: 0 10px;
+}
+
+.bottom-nav button {
+  all: unset;
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  min-width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  color: #93c5fd;
+}
+
+.bottom-nav button:hover {
+  background: rgba(96, 165, 250, 0.3);
+  transform: translateY(-2px);
+  color: #bfdbfe;
+}
+
+.bottom-nav button i {
+  font-size: clamp(20px, 5vw, 24px);
+  margin-bottom: 6px;
+}
+
+.bottom-nav button span {
+  font-size: clamp(12px, 3vw, 15px);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* === Мобільна адаптивність === */
+@media (max-width: 480px) {
+  .bottom-nav {
+    height: 76px;
+    padding: 0 6px;
   }
 
-  .user-container h2 {
-    font-size: 1.6em;
-  }
-
-  .user-container p {
-    font-size: 1em;
+  .bottom-nav button {
+    min-width: 64px;
+    padding: 10px 12px;
   }
 }

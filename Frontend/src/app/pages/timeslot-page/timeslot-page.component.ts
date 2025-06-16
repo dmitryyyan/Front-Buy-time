@@ -31,8 +31,9 @@ interface TimeSlot {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-timeslot-page',
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule], // Додайте ReactiveFormsModule
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule],
   templateUrl: './timeslot-page.component.html',
   styleUrls: ['./timeslot-page.component.css']
 })
@@ -146,5 +147,16 @@ export class TimeslotPageComponent implements OnInit {
 
   navigateToUserPage(): void {
     this.router.navigate(['/user-page']);
+  }
+  button1Action() {
+    this.router.navigate(['/teacher']);
+  }
+
+  button2Action() {
+    this.router.navigate(['/add-timeslot']);
+  }
+
+  button3Action() {
+     this.router.navigate(['/createbook']);
   }
 }

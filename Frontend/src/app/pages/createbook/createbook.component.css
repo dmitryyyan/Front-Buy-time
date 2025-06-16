@@ -1,170 +1,201 @@
-body, html {
-  height: 100%;
+html,
+body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
-}
-
-.create-book-container {
-  height: 30em;
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto', sans-serif;
-  color: #fff;
-  position: relative;
-  padding: 5%;
-  background-color: rgba(34, 87, 137, 0.8); /* Темно-синій з прозорістю */
-  border-radius: 0px;
-  margin: 0;
-  color: #fff;
-  padding-bottom: 50%;
-}
-
-.create-book-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('../../../../lion.png') no-repeat center center fixed; /* Background image from the specified folder */
-  background-size: cover;
-  opacity: 0.2; /* Make the image semi-transparent */
-  z-index: -1; /* Place it behind the content */
-}
-
-.create-book-container h2 {
-  margin-bottom: 25px;
-  text-align: center;
-  color: #fff; /* White text */
-}
-
-.create-book-container form {
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  color: #cbd5e1;
   display: flex;
   flex-direction: column;
 }
 
-.create-book-container .form-group {
-  margin-bottom: 15px;
+* {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.create-book-container form label {
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #fff; /* White text */
-}
-
-.create-book-container form select,
-.create-book-container form textarea,
-.create-book-container form button {
-  padding: 12px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  color: black; /* Black text */
-  width: 100%; /* Make input fields responsive */
-  box-sizing: border-box; /* Include padding and border in element's total width and height */
-  background-color: #afe2ed; /* Light green background */
-}
-
-.create-book-container form textarea {
-  resize: vertical; /* Allow vertical resizing */
-}
-
-.create-book-container form button {
-  background-color: #00aaff; /* Light blue button */
-  color: white; /* White text */
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-}
-
-.create-book-container form button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.create-book-container form button:hover {
-  background-color: #0088cc; /* Darker blue on hover */
-}
-
-.message-box {
-  margin-top: 20px;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #d4edda; /* Light green background */
-  color: #155724; /* Dark green text */
-  text-align: center;
-}
-
-.button-container {
+.wrapper {
+  flex: 1 0 auto;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.95);
+  min-height: calc(100vh - 80px);
+  padding-top: 32px;
+  
+}
+
+.page-container {
+  flex: 1;
+  max-width: 768px;
+  width: 100%;
+  padding: clamp(16px, 4vw, 32px);
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 16px 16px 0 0;
+  border-top: 1px solid rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+}
+
+.page-title {
+  text-align: center;
+  font-size: clamp(20px, 4vw, 28px);
+  margin-bottom: 24px;
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.glass-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: clamp(14px, 3vw, 16px);
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #1e293b;
+  color: #f1f5f9;
+  font-size: clamp(14px, 3vw, 15px);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.ton-connect-button {
+  width: 100%;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  color: white;
+  font-weight: 600;
+  font-size: clamp(14px, 3.5vw, 16px);
+  padding: 14px 20px;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 12px;
+}
+
+.ton-connect-button:hover {
+  background: linear-gradient(90deg, #3b82f6, #93c5fd);
+  transform: translateY(-2px);
+}
+
+.wallet-connected {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-success,
+.alert-info {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.alert-info {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 97%;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.5); /* Темне напівпрозоре фонове забарвлення */
+  right: 0;
+  height: 80px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(59, 130, 246, 0.2);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  padding: 0 10px;
 }
 
-.button-container button {
-  flex: 1;
-  margin: 5px;
-  padding: 10px 0;
-  font-size: 18px;
-  background-color: #00aaff; /* Акцентний колір, світло-блакитний */
-  color: white;
-  border: none;
-  border-radius: 5px; /* Додаємо округлення кнопок */
+.bottom-nav button {
+  all: unset;
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  min-width: 72px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкий тіньовий ефект */
+  transition: background 0.3s, transform 0.2s;
+  color: #93c5fd;
 }
 
-.button-container button i {
-  margin-right: 8px;
+.bottom-nav button:hover {
+  background: rgba(96, 165, 250, 0.3);
+  transform: translateY(-2px);
+  color: #bfdbfe;
 }
 
-.button-container button:hover {
-  background-color: #0088cc; /* Трохи темніший відтінок для hover */
+.bottom-nav button i {
+  font-size: clamp(20px, 5vw, 24px);
+  margin-bottom: 6px;
 }
 
-@media (max-width: 768px) {
-  .create-book-container {
-    padding: 2%;
-    padding-bottom: 70%;
+.bottom-nav button span {
+  font-size: clamp(12px, 3vw, 15px);
+  font-weight: 600;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .bottom-nav {
+    height: 76px;
+    padding: 0 6px;
   }
 
-  .create-book-container h2 {
-    font-size: 1.6em;
-  }
-
-  .create-book-container p {
-    font-size: 1em;
-  }
-
-  .button-container button {
-    font-size: 18px;
-    padding: 17px 0;
-  }
-
-  .light-blue-button {
-    padding: 10px 22px; /* Further adjust padding for smaller screens */
-    font-size: 12px; /* Further adjust font size for smaller screens */
-  }
-
-  .input-text {
-    width: 95%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #171616;
-    border-radius: 5px;
-    font-size: 1.1em;
-    background-color: rgb(186, 224, 253);
+  .bottom-nav button {
+    min-width: 64px;
+    padding: 10px 12px;
   }
 }

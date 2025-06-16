@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ConnectWalletComponent } from './connect-wallet.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConnectWalletComponent', () => {
   let component: ConnectWalletComponent;
@@ -8,9 +8,9 @@ describe('ConnectWalletComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConnectWalletComponent]
-    })
-    .compileComponents();
+      declarations: [ConnectWalletComponent],
+      imports: [HttpClientTestingModule]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ConnectWalletComponent);
     component = fixture.componentInstance;

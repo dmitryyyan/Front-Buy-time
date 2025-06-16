@@ -1,38 +1,51 @@
-<div class="register-container">
-  <h2>Реєстрація</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<div class="wrapper">
+  <div class="page-container">
+    <h1>Реєстрація</h1>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="glass-form">
+      <div class="form-group">
+        <label for="firstName">Ім'я</label>
+        <input id="firstName" type="text" formControlName="firstName" />
+      </div>
 
-    <div class="form-group">
-      <label for="firstName">Ім'я</label>
-      <input id="firstName" formControlName="firstName" type="text" required />
-    </div>
+      <div class="form-group">
+        <label for="lastName">Прізвище</label>
+        <input id="lastName" type="text" formControlName="lastName" />
+      </div>
 
-    <div class="form-group">
-      <label for="lastName">Прізвище</label>
-      <input id="lastName" formControlName="lastName" type="text" required />
-    </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
 
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" formControlName="email" type="email" required />
-    </div>
+      <div class="form-group">
+        <label for="telegramChatId">Telegram Chat ID</label>
+        <input
+          id="telegramChatId"
+          type="text"
+          formControlName="telegramChatId"
+        />
+      </div>
 
-    <div class="form-group">
-      <label for="telegramChatId">telegramChatId</label>
-      <input id="telegramChatId" formControlName="telegramChatId" type="telegramChatId" required />
-    </div>
+      <div class="form-group">
+        <label for="description">Опис</label>
+        <input id="description" type="text" formControlName="description" />
+      </div>
 
-    <div class="form-group">
-      <label for="description">description</label>
-      <input id="description" formControlName="description" type="description" required />
-    </div>
-    
-    <div class="form-group">
-      <label for="tags">tags</label>
-      <input id="tags" formControlName="tags" type="tags" required />
-    </div>
+      <div class="form-group">
+        <label for="tags">Теги</label>
+        <input id="tags" type="text" formControlName="tags" />
+      </div>
 
-    <button type="submit" [disabled]="loading">Зареєструватися</button>
-  </form>
-  <div *ngIf="message" class="message">{{ message }}</div>
+      <div class="checkbox-group">
+        <input id="isTeacher" type="checkbox" formControlName="isTeacher" />
+        <label for="isTeacher">Я експерт</label>
+      </div>
+
+      <button type="submit" class="ton-connect-button" [disabled]="loading">
+        Зареєструватися
+      </button>
+    </form>
+
+    <div *ngIf="message" class="info-message">{{ message }}</div>
+  </div>
 </div>

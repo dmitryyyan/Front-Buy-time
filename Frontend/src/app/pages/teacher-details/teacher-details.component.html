@@ -1,44 +1,81 @@
+<!-- Підключи ці лінки в <head> index.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  crossorigin="anonymous"
+/>
+
 <body>
-  <div class="teacher-details-container">
-    <button class="back-button" (click)="navigateToTeacherList()">← Back</button>
-    <div class="teacher-details-content">
-      <br><br>
-      <h2>{{ teacher.firstName }} {{ teacher.lastName }}</h2>
-      <!-- <p><strong>Role:</strong> {{ teacher.role }}</p> -->
-      <p><strong>Email:</strong> {{ teacher.email }}</p>
-      <p><strong>Description:</strong> {{ teacher.description || 'N/A' }}</p>
-      <p><strong>Tags:</strong> {{ teacher.tags || 'N/A' }}</p>
-      
+  <!-- Кнопка Назад -->
+  <div class="back-button-fixed">
+    <button class="back-button" (click)="navigateToTeacherList()">
+      <i class="fas fa-arrow-left"></i> Назад
+    </button>
+  </div>
+
+  <div class="wrapper">
+    <div class="page-container">
+      <!-- TON гаманець -->
+      <div id="ton-connect-button" style="margin-bottom: 20px"></div>
+
+      <h2 class="section-title">
+        {{ teacher.firstName }} {{ teacher.lastName }}
+      </h2>
+
+      <div class="teacher-details-content">
+        <p><strong>Email:</strong> {{ teacher.email }}</p>
+        <p><strong>Опис:</strong> {{ teacher.description || "—" }}</p>
+        <p><strong>Теги:</strong> {{ teacher.tags || "—" }}</p>
+      </div>
+
       <div *ngIf="timeSlots.length > 0">
-        <h3>Time slots expert</h3>
+        <h3 class="sub-title">Слоти часу</h3>
         <ul class="timeslot-list">
           <li *ngFor="let slot of timeSlots" class="timeslot-item">
-            <p><strong>Start time:</strong> {{ slot.startTime }}</p>
-            <p><strong>Finish time:</strong> {{ slot.endTime }}</p>
-            <p><strong>Active:</strong> {{ slot.isAvailable }}</p>
-            <button *ngIf="slot.isAvailable" class="light-blue-button" (click)="bookTimeSlot(slot)">Book</button>
+            <p><strong>Початок:</strong> {{ slot.startTime }}</p>
+            <p><strong>Кінець:</strong> {{ slot.endTime }}</p>
+            <p>
+              <strong>Активний:</strong> {{ slot.isAvailable ? "Так" : "Ні" }}
+            </p>
+            <button
+              *ngIf="slot.isAvailable"
+              class="ton-connect-button"
+              (click)="bookTimeSlot(slot)"
+            >
+              Забронювати
+            </button>
           </li>
         </ul>
       </div>
-      <div *ngIf="timeSlots.length === 0">
-        <p>No time slots available.</p>
+      <div *ngIf="timeSlots.length === 0" class="no-user-data">
+        <p>Немає доступних слотів.</p>
       </div>
 
       <div *ngIf="bookings.length > 0">
-        <h3>Bookings</h3>
+        <h3 class="sub-title">Бронювання</h3>
         <ul class="timeslot-list">
           <li *ngFor="let booking of bookings" class="timeslot-item">
-            <p *ngIf="booking.user"><strong>Booking -- </strong> {{ booking.user.firstName }} {{ booking.user.lastName }}</p>
-            <p *ngIf="booking.user" > <strong>Email: </strong> {{booking.user.email}}</p>
-            <p><strong>Status:</strong> {{ booking.status }}</p>
-            <p><strong>Time create:</strong> {{ booking.createdAt }}</p>
-            <p><strong>Time:</strong> {{ booking.endTime }}</p>
-            
+            <p *ngIf="booking.user">
+              <strong>Бронював:</strong> {{ booking.user.firstName }}
+              {{ booking.user.lastName }}
+            </p>
+            <p *ngIf="booking.user">
+              <strong>Email:</strong> {{ booking.user.email }}
+            </p>
+            <p><strong>Статус:</strong> {{ booking.status }}</p>
+            <p><strong>Створено:</strong> {{ booking.createdAt }}</p>
+            <p><strong>Час:</strong> {{ booking.endTime }}</p>
           </li>
         </ul>
       </div>
-      <div *ngIf="bookings.length === 0">
-        <p>No bookings available.</p>
+      <div *ngIf="bookings.length === 0" class="no-user-data">
+        <p>Немає бронювань.</p>
       </div>
     </div>
   </div>

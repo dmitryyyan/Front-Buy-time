@@ -1,23 +1,19 @@
-.wallet-container {
-    text-align: center;
-    margin-top: 50px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  .wallet-info {
-    margin-top: 20px;
-    font-size: 18px;
-  }
+.connect-button {
+  padding: 15px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #0088cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.connect-button small {
+  font-weight: 300;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+  opacity: 0.8;
+}

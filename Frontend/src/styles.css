@@ -1,5 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+/* CSS Reset (скидання базових стилів) */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* Для HTML5 елементів (щоб вони коректно відображались у старих браузерах) */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/* Глобальні стилі */
 body {
     background: var(--tg-theme-bg-color);
     color: var(--tg-theme-text-color);
+    line-height: 1;
+    font-family: inherit;
 }

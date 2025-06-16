@@ -13,6 +13,7 @@ import { TimeSlotComponent } from './pages/time-slot/time-slot.component';
 //import { ContractInteractionComponent } from './pages/contract-interaction/contract-interaction.component';
 import { ConnectWalletComponent } from './pages/connect-wallet/connect-wallet.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { ReactTonConnectComponent } from './pages/react-ton-connect/react-ton-connect.component';
 
 export const routes: Routes = [
   { path: '', component: UserPageComponent, pathMatch: 'full' },
@@ -30,4 +31,5 @@ export const routes: Routes = [
  // { path: 'contract-interaction', component: ContractInteractionComponent },
   { path: 'connect-wallet', component: ConnectWalletComponent },
   { path: 'register', component: RegisterComponent },
-];
+  { path: 'react-ton-connect', component: ReactTonConnectComponent },
+]

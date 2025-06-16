@@ -69,24 +69,27 @@ export class TeacherComponent implements OnInit {
   }
 
   searchTeachers(): void {
-    if (this.searchName.trim() === '') {
+    const trimmed = this.searchName.trim();
+    if (!trimmed) {
       this.fetchAllTeachers();
-    } else {
-      const [firstName, lastName] = this.searchName.split(' ');
-      this.teacherService.getTeachersByName(firstName, lastName).subscribe(
-        (data) => {
-          console.log('Fetched searched teachers data:', data); // Log the fetched data
-          this.teachers = data.filter(teacher => teacher.isTeacher); // Filter and store only teachers
-          this.teachers.forEach(teacher => {
-            console.log('Teacher ID:', teacher.id); // Log each teacher's ID
-          });
-        },
-        (error) => {
-          console.error('Error fetching searched teachers data', error);
-        }
-      );
+      return;
     }
+  
+    const [firstName, ...lastParts] = trimmed.split(' ');
+    const lastName = lastParts.join(' '); // підтримка складених прізвищ
+  
+    this.teacherService.getTeachersByName(firstName, lastName).subscribe(
+      (data) => {
+        console.log('Результати пошуку:', data);
+        this.teachers = data.filter(teacher => teacher.isTeacher);
+      },
+      (error) => {
+        console.error('❌ Помилка при пошуку викладачів:', error);
+        this.teachers = [];
+      }
+    );
   }
+  
 
   viewTeacherDetails(teacherId: string): void {
     this.router.navigate(['/teach-info', teacherId]);

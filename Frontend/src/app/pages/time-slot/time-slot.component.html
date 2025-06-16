@@ -1,46 +1,121 @@
-<div class="page-container">
-  <button class="back-button" (click)="navigateToUserPage()">Назад</button>
-  <div *ngIf="!userData" class="no-user-data">
-    <p>No DATA.</p>
+<!-- Обов’язково додай це у <head> index.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  crossorigin="anonymous"
+/>
+
+<body>
+  <div class="back-button-fixed">
+    <button class="back-button" (click)="navigateToUserPage()">
+      <i class="fas fa-arrow-left"></i> Назад
+    </button>
   </div>
-  <div class="user-container">
-    <br>
-    <h2>Wait confirmed</h2>
-    <ul *ngIf="timeSlots.length > 0" class="timeslot-list">
-      <ng-container *ngFor="let slot of timeSlots">
 
-        
-        <li class="timeslot-item" *ngIf="!slot.isAvailable">
-          <div *ngIf="slot.userDetails?.firstName; else noData">
-            <p><strong>Name:</strong> {{ slot.userDetails.firstName }} {{ slot.userDetails.lastName }}</p>
-            <p *ngIf="slot.userDetails?.email"><strong>Email:</strong> {{ slot.userDetails.email }}</p>
+  <div class="wrapper">
+    <!-- Приховує контейнер, якщо даних взагалі немає -->
+    <div class="page-container" *ngIf="userData || timeSlots.length > 0">
+      <h2 class="section-title">Очікує підтвердження</h2>
+
+      <div *ngIf="!userData" class="no-user-data">
+        <p>Немає даних користувача.</p>
+      </div>
+
+      <div class="user-container">
+        <ng-container
+          *ngIf="
+            timeSlots.length > 0 && hasUnconfirmedSlots();
+            else noTimeSlots
+          "
+        >
+          <div
+            *ngFor="let slot of timeSlots"
+            class="booking-form"
+            [hidden]="slot.isAvailable || slot.isConfirmed"
+          >
+            <div class="form-group">
+              <label>Імʼя</label>
+              <input
+                type="text"
+                [value]="
+                  slot.userDetails?.firstName
+                    ? slot.userDetails.firstName +
+                      ' ' +
+                      slot.userDetails.lastName
+                    : 'Немає даних'
+                "
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input
+                type="text"
+                [value]="slot.userDetails?.email || 'Немає даних'"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Початок</label>
+              <input
+                type="text"
+                [value]="slot.startTime || 'Немає даних'"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Кінець</label>
+              <input
+                type="text"
+                [value]="slot.endTime || 'Немає даних'"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Статус</label>
+              <input
+                type="text"
+                [value]="slot.isConfirmed ? 'Підтверджено' : 'Очікує'"
+                readonly
+              />
+            </div>
+
+            <div class="form-group buttons-group">
+              <button
+                class="confirm-button"
+                [hidden]="slot.isConfirmed"
+                (click)="openConfirmationDialog(slot.id)"
+              >
+                ✅ Підтвердити
+              </button>
+
+              <button
+                class="cancel-book-button"
+                [hidden]="slot.isConfirmed"
+                (click)="expertCancel(slot.id)"
+              >
+                ❌ Скасувати
+              </button>
+            </div>
           </div>
-          <p *ngIf="slot.startTime"><strong>Start time:</strong> {{ slot.startTime }}</p>
-          <p *ngIf="slot.endTime"><strong>Finish time:</strong> {{ slot.endTime }}</p>
-         <!-- <p><strong>Активний ?:</strong> ні</p>-->
-          <p><strong>Статус:</strong> {{ slot.isConfirmed ? 'сonfirmed' : 'Pending' }}</p>
-          
-          <button 
-            class="confirm-button" 
-            *ngIf="!slot.isConfirmed" 
-            (click)="openConfirmationDialog(slot.id)">
-            Confirm book
-          </button>
+        </ng-container>
 
-          <button
-             class="cancel-book-button"
-            *ngIf="!slot.isConfirmed"
-            (click)="expertCancel(slot.id)">
-  Cancel book
-          </button>
-          <ng-template #noData>
-            <p><strong>No data about userss.</strong></p>
-          </ng-template>
-        </li>
-      </ng-container>
-    </ul>
-    <div *ngIf="timeSlots.length === 0">
-      <p><strong>No timeslot.</strong></p>
+        <ng-template #noTimeSlots>
+          <div class="no-user-data">
+            <p>Немає слотів, що очікують підтвердження.</p>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
-</div>
+</body>
