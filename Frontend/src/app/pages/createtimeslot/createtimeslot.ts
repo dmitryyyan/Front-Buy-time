@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherService } from '../../services/teacher.service';
+import { TeacherService } from '../react-ton-connect/teacher.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -45,26 +45,25 @@ export class AddTimeslotComponent implements OnInit {
     private teacherService: TeacherService,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router// Inject HttpClient
+    private router: Router // Inject HttpClient
   ) { }
 
-   
-  
-    button1Action() {
-      this.router.navigate(['/teacher']);
-    }
-  
-    button2Action() {
-      this.router.navigate(['/add-timeslot']);
-    }
-  
-    button3Action() {
-       this.router.navigate(['/createbook']);
-    }
-  
-    navigateToUserPage() {
-      this.router.navigate(['/user-page']);
-    }
+  // Button methods
+  button1Action() {
+    this.router.navigate(['/teacher']);
+  }
+
+  button2Action() {
+    this.router.navigate(['/add-timeslot']);
+  }
+
+  button3Action() {
+    this.router.navigate(['/createbook']);
+  }
+
+  navigateToUserPage() {
+    this.router.navigate(['/user-page']);
+  }
 
   ngOnInit(): void {
     this.fetchChatId();

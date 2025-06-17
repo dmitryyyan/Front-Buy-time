@@ -18,13 +18,11 @@ export class ReactTonConnectComponent implements AfterViewInit, OnDestroy {
     const container = this.elRef.nativeElement.querySelector('#react-root');
     this.root = ReactDOM.createRoot(container);
 
-    const props = {
-      manifestUrl: 'https://dmitryyyan.github.io/ton-wallet-manifest/tonconnect-manifest.json',
-      children: React.createElement(TonConnectButton, null)
-    };
-
     this.root.render(
-      React.createElement(TonConnectUIProvider, props)
+      React.createElement(
+        TonConnectUIProvider,
+        { manifestUrl: 'https://dmitryyyan.github.io/ton-wallet-manifest/tonconnect-manifest.json', children: React.createElement(TonConnectButton) }
+      )
     );
   }
 
@@ -33,8 +31,9 @@ export class ReactTonConnectComponent implements AfterViewInit, OnDestroy {
       this.root.unmount();
     }
   }
-
+ 
   goBack() {
-    this.router.navigate(['/']); // Або потрібний маршрут
+    this.router.navigate(['/']); // або потрібний роут
   }
+
 }

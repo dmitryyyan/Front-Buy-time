@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // Для здійснення HTTP запитів
+import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Додайте ReactiveFormsModule
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserDataService } from '../../services/user-data.service';
 import { TimeslotService } from '../../services/timeslot.service';
 
 interface UserData {
-  id: string; // Ensure the Id property is included
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -27,7 +26,7 @@ interface TimeSlot {
   startTime: string;
   endTime: string;
   isAvailable: boolean;
-  userId: string; // Ensure the TeacherId property is included
+  userId: string;
 }
 
 @Component({
@@ -42,7 +41,7 @@ export class TimeslotPageComponent implements OnInit {
   timeSlots: TimeSlot[] = [];
   chatId: string | null = null;
   userForm: FormGroup;
-  isSubmitting: boolean = false;
+  isSubmitting = false;
 
   constructor(
     private userDataService: UserDataService,
@@ -70,7 +69,6 @@ export class TimeslotPageComponent implements OnInit {
     this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
       (response) => {
         this.chatId = response.chatId;
-        console.log('Chat ID:', this.chatId); // Вивід chatId в консоль
         this.fetchUserData();
       },
       (error) => {
@@ -86,16 +84,11 @@ export class TimeslotPageComponent implements OnInit {
     }
     this.http.get<UserData>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`).subscribe(
       (data) => {
-        console.log('Fetched user data:', data); // Log the fetched data
         if (data && !data.message) {
-          this.userData = data; // Зберігаємо отримані дані користувача
-          this.userForm.patchValue({ isTeacher: data.isTeacher }, { emitEvent: false }); // Set the checkbox value without emitting event
-          console.log('User Data:', data); // Log the entire user data
+          this.userData = data;
+          this.userForm.patchValue({ isTeacher: data.isTeacher }, { emitEvent: false });
           if (data.id) {
-            console.log('User ID:', data.id); // Log the user ID
-            this.fetchTimeSlotsByTeacherId(data.id); // Викликати метод тут з потрібним userId
-          } else {
-            console.error('User ID is undefined');
+            this.fetchTimeSlotsByTeacherId(data.id);
           }
         } else {
           console.log('No user data available');
@@ -110,9 +103,8 @@ export class TimeslotPageComponent implements OnInit {
   fetchTimeSlotsByTeacherId(userId: string): void {
     this.timeslotService.getAllTimeSlots().subscribe(
       (data) => {
-        console.log('Fetched all time slots:', data); // Log all fetched data
-        console.log(userId); // Log the user ID
-        this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase()); // Filter and store matching timeslots
+        // Фільтруємо таймслоти по userId, тут краще порівнювати lowerCase тільки якщо id з бази завжди у нижньому регістрі!
+        this.timeSlots = data.filter(slot => slot.userId.toLowerCase() === userId.toLowerCase());
       },
       (error) => {
         console.error('Error fetching time slots', error);
@@ -126,13 +118,10 @@ export class TimeslotPageComponent implements OnInit {
       const userId = this.userData.id;
       const isTeacher = this.userForm.get('isTeacher')?.value;
 
-      console.log('Toggling isTeacher status for user:', userId, 'to:', isTeacher);
-
       this.http.put(`http://localhost:5258/api/user/toggle-is-teacher?userId=${userId}`, { isTeacher }).subscribe(response => {
-        console.log('User isTeacher status updated successfully', response);
-        this.fetchUserData(); // Refresh user data after updating the role
-        this.fetchTimeSlotsByTeacherId(userId); // Refresh timeslots after updating the role
-        alert(`Ви тепер ${isTeacher ? 'викладач' : 'студент'}`); // Show message box
+        this.fetchUserData();
+        this.fetchTimeSlotsByTeacherId(userId);
+        alert(`Ви тепер ${isTeacher ? 'викладач' : 'студент'}`);
         this.isSubmitting = false;
       }, error => {
         console.error('Error updating user isTeacher status', error);
@@ -151,12 +140,10 @@ export class TimeslotPageComponent implements OnInit {
   button1Action() {
     this.router.navigate(['/teacher']);
   }
-
   button2Action() {
     this.router.navigate(['/add-timeslot']);
   }
-
   button3Action() {
-     this.router.navigate(['/createbook']);
+    this.router.navigate(['/createbook']);
   }
 }

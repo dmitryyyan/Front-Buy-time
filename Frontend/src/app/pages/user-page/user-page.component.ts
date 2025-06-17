@@ -184,56 +184,56 @@ export class UserPageComponent implements OnInit {
     }
   }
 
-  async connectWallet() {
-    try {
-      // Перевірка наявності Phantom Wallet
-      const provider = (window as any).solana;
-      if (!provider || !provider.isPhantom) {
-        alert('Phantom Wallet не знайдено. Встановіть його для продовження.');
-        return;
-      }
+  // async connectWallet() {
+  //   try {
+  //     // Перевірка наявності Phantom Wallet
+  //     const provider = (window as any).solana;
+  //     if (!provider || !provider.isPhantom) {
+  //       alert('Phantom Wallet не знайдено. Встановіть його для продовження.');
+  //       return;
+  //     }
 
-      // Підключення до гаманця
-      const response = await provider.connect();
-      this.walletAddress = response.publicKey.toString();
-      console.log('Wallet Address:', this.walletAddress);
+  //     // Підключення до гаманця
+  //     const response = await provider.connect();
+  //     this.walletAddress = response.publicKey.toString();
+  //     console.log('Wallet Address:', this.walletAddress);
 
-      // Збереження номера гаманця в базі даних
-      this.saveWalletAddress();
+  //     // Збереження номера гаманця в базі даних
+  //     this.saveWalletAddress();
 
-      // Reload the page after successful wallet connection
-      window.location.reload();
-    } catch (error) {
-      console.error('Помилка підключення до гаманця:', error);
-    }
-  }
+  //     // Reload the page after successful wallet connection
+  //     window.location.reload();
+  //   } catch (error) {
+  //     console.error('Помилка підключення до гаманця:', error);
+  //   }
+  // }
 
-  saveWalletAddress() {
-    if (!this.walletAddress) {
-      alert('Гаманець не підключено.');
-      return;
-    }
+  // saveWalletAddress() {
+  //   if (!this.walletAddress) {
+  //     alert('Гаманець не підключено.');
+  //     return;
+  //   }
 
-    const apiUrl = 'http://localhost:5258/api/wallet/set-by-user-id';
-    const payload = {
+  //   const apiUrl = 'http://localhost:5258/api/wallet/set-by-user-id';
+  //   const payload = {
       
-      userId: this.userId,
-      walletType: 'Phantom',
-      walletAddress: this.walletAddress,
-    };
-    console.log('Payload:', payload);
+  //     userId: this.userId,
+  //     walletType: 'Phantom',
+  //     walletAddress: this.walletAddress,
+  //   };
+  //   console.log('Payload:', payload);
 
-    this.http.post(apiUrl, payload).subscribe({
-      next: (response) => {
-        console.log('Гаманець успішно збережено:', response);
-        alert('Гаманець успішно збережено!');
-      },
-      error: (error) => {
-        console.error('Помилка збереження гаманця:', error);
-        alert('Помилка збереження гаманця.');
-      },
-    });
-  }
+  //   this.http.post(apiUrl, payload).subscribe({
+  //     next: (response) => {
+  //       console.log('Гаманець успішно збережено:', response);
+  //       alert('Гаманець успішно збережено!');
+  //     },
+  //     error: (error) => {
+  //       console.error('Помилка збереження гаманця:', error);
+  //       alert('Помилка збереження гаманця.');
+  //     },
+  //   });
+  // }
 
 
   getLionEmojis(rating: number): string {

@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  ViewChild } from '@angular/core';
-import { TeacherService } from '../../services/teacher.service';
+import { TeacherService } from '../react-ton-connect/teacher.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TonConnectService } from '../react-ton-connect/ton-connect.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../teacher-details/confirm-dialog.component';
 import { ReactTonConnectComponent } from '../react-ton-connect/react-ton-connect.component';
-
-
 
 @Component({
   selector: 'app-teacher-details',
@@ -41,7 +38,10 @@ export class TeacherDetailsComponent implements OnInit {
     const teacherId = this.route.snapshot.paramMap.get('id');
 
     this.teacherService.getTeacherById(teacherId).subscribe(
-      (data) => this.teacher = data,
+      (data) => {
+        this.teacher = data;
+        console.log("Teacher details:", data);
+      },
       (error) => console.error('Error fetching teacher details', error)
     );
 
@@ -65,9 +65,16 @@ export class TeacherDetailsComponent implements OnInit {
 
   fetchChatId(): void {
     this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
-      (res) => this.fetchUserData(res.chatId),
+      async (res) => {
+        await this.teacherService.createUserIfNotExists(res.chatId);
+        this.fetchUserData(res.chatId);
+      },
       (err) => console.error('Error fetching chat ID', err)
     );
+  }
+
+  createUserIfNotExists(chatId: string): Promise<any> {
+    return this.http.post('http://localhost:5258/api/user/create-if-not-exists', { chatId }).toPromise();
   }
 
   fetchUserData(chatId: string): void {
@@ -93,7 +100,6 @@ export class TeacherDetailsComponent implements OnInit {
 
   compareUserIdWithAllUsers(): void {
     if (!this.userId) return;
-
     this.http.get<any[]>('http://localhost:5258/api/user/get-all').subscribe(
       (users) => {
         this.bookings.forEach(booking => {
@@ -105,77 +111,91 @@ export class TeacherDetailsComponent implements OnInit {
     );
   }
 
- async bookTimeSlot(slot: any): Promise<void> {
-  // Відкриваємо діалог підтвердження
-  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    data: { message: '🔐 Оплата 0.05 TON за урок. Продовжити?' }
-  });
-
-  // Чекаємо результату діалогу
-  const result = await dialogRef.afterClosed().toPromise();
-
-  if (!result) {
-    this.message = '⛔ Оплату скасовано.';
-    return; // Якщо користувач відмовився — виходимо
-  }
-
-  try {
-    this.isLoading = true;
-    this.message = '⏳ Підключення до гаманця...';
-
-    // Чекаємо підключення гаманця
-    await this.tonConnectService.waitForWalletConnection();
-
-    const recipient = this.teacher?.walletAddress || 'UQCLh0egr0z_VyuPXfMZ3wk42e8qmTY7VDs3jU2vKGVrLTFR';
-    const amount = 0.05;
-
-    this.message = '📤 Надсилання TON...';
-
-    // Цей виклик відкриє вікно гаманця для підтвердження транзакції
-    const boc = await this.tonConnectService.sendTon(amount, recipient);
-
-    this.message = '📚 Оплата успішна! Створюємо бронювання...';
-
-    // Надсилаємо дані бронювання на бекенд
-    const bookingData = {
-      userId: this.userId,
-      timeslotId: slot.id,
-      status: 'booked',
-      message: '',
-      urlOfMeeting: '',
-      boc: boc // передаємо BOC на бекенд
-    };
-
-    const response = await this.http.post('http://localhost:5258/api/booking/create', bookingData).toPromise();
-
-    console.log('Booking successful:', response);
-    this.message = '✅ Букінг та оплата успішні!';
-    slot.isAvailable = false;
-
-  } catch (error: any) {
-    console.error('Помилка при оплаті або букінгу:', error);
-
-    let userMessage = '❌ Сталася помилка під час оплати або букінгу.';
-
-    if (error?.message?.toLowerCase().includes('user rejects') || error?.message?.toLowerCase().includes('user rejected')) {
-      userMessage = '❌ Ви скасували транзакцію.';
-    } else if (error?.message?.toLowerCase().includes('not enough')) {
-      userMessage = '❌ Недостатньо TON для оплати.';
-    }
-
-    this.message = userMessage;
-
-    this.dialog.open(ConfirmDialogComponent, {
-      data: { message: userMessage }
+  async bookTimeSlot(slot: any): Promise<void> {
+    // 1. Відкриваємо діалог оплати
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        message: 'Для бронювання потрібно оплатити 0.05 TON. Після цього бронювання підтвердиться автоматично.'
+      }
     });
-
-  } finally {
-    this.isLoading = false;
+  
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) {
+      this.message = '';
+      return;
+    }
+  
+    try {
+      this.isLoading = true;
+      this.message = '⏳ Підключення до гаманця...';
+      await this.tonConnectService.waitForWalletConnection();
+  
+      const amount = 0.05;
+      let teacherChatId = slot.teacherChatId;
+      if (!teacherChatId) {
+        const teacher = await this.teacherService.getTeacherById(slot.userId).toPromise();
+        teacherChatId = teacher?.telegramChatId;
+      }
+      if (!teacherChatId) {
+        throw new Error('Telegram ChatId у викладача відсутній!');
+      }
+  
+      this.message = '📤 Надсилання TON...';
+  
+      // --- Ось тут основна обробка помилки ---
+      let teacherWalletAddress;
+      try {
+        teacherWalletAddress = await this.teacherService.getTeacherWalletAddressByChatId(teacherChatId).toPromise();
+      } catch (err: any) {
+        if (err.status === 500) {
+          this.message = '❌ Сталася помилка на сервері при отриманні TON-адреси викладача!';
+          alert(this.message + '\n\n(Internal server error)\n\nПовідомте підтримку!');
+          throw err;
+        }
+        throw err;
+      }
+  
+      if (!teacherWalletAddress) {
+        this.message = '❌ Викладач ще не підключив TON-гаманець. Оплата неможлива!';
+        alert(this.message);
+        return;
+      }
+  
+      // --- Далі все як було ---
+      await this.tonConnectService.sendTonToTeacher(teacherChatId, amount);
+  
+      this.message = '📚 Оплата успішна! Створюємо бронювання...';
+  
+      const bookingData = {
+        userId: this.userId,
+        timeslotId: slot.id,
+        status: 'booked',
+        message: '',
+        urlOfMeeting: '',
+        boc: 'transaction_boc_here',
+      };
+  
+      await this.http.post('http://localhost:5258/api/booking/create', bookingData).toPromise();
+      this.message = '✅ Букінг та оплата успішні!';
+      slot.isAvailable = false;
+    } catch (error: any) {
+      // Загальна помилка
+      if (error?.status === 500) {
+        this.message = '❌ Внутрішня помилка сервера. Спробуйте пізніше або зверніться до підтримки.';
+        alert(this.message);
+      } else {
+        this.message = '❌ Сталася помилка при оплаті або букінгу.';
+        alert(this.message + '\n\n' + (error?.message || error));
+      }
+      console.error('Error in booking or payment:', error);
+    } finally {
+      this.isLoading = false;
+    }
   }
-}
+  
+  
 
-  
-  
   navigateToTeacherList(): void {
     this.router.navigate(['/teacher']);
   }

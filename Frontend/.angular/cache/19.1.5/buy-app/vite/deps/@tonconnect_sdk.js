@@ -42,7 +42,7 @@ import {
   isWalletInfoInjected,
   isWalletInfoRemote,
   toUserFriendlyAddress
-} from "./chunk-4DTPDVK3.js";
+} from "./chunk-XIL54JJK.js";
 import "./chunk-WOR4A3D2.js";
 export {
   BadRequestError,

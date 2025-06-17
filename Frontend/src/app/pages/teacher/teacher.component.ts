@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherService } from '../../services/teacher.service';
+import { TeacherService } from '../react-ton-connect/teacher.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ interface UserData {
   message?: string;
   isTeacher: boolean;
   rating: number;
+  walletAddress?: string | null; 
 }
 
 @Component({

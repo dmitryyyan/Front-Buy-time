@@ -42,10 +42,10 @@ import {
   isWalletInfoInjected,
   isWalletInfoRemote,
   toUserFriendlyAddress
-} from "./chunk-4DTPDVK3.js";
+} from "./chunk-XIL54JJK.js";
 import {
   require_react
-} from "./chunk-U7RUYDA4.js";
+} from "./chunk-3FQXC5TK.js";
 import {
   __commonJS,
   __toESM
