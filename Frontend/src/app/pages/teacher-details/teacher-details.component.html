@@ -1,16 +1,3 @@
-<!-- Підключи ці лінки в <head> index.html -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  crossorigin="anonymous"
-/>
-
 <body>
   <!-- Кнопка Назад -->
   <div class="back-button-fixed">
@@ -38,21 +25,23 @@
         <h3 class="sub-title">Слоти часу</h3>
         <ul class="timeslot-list">
           <li *ngFor="let slot of timeSlots" class="timeslot-item">
-            <p><strong>Початок:</strong> {{ slot.startTime }}</p>
-            <p><strong>Кінець:</strong> {{ slot.endTime }}</p>
+            <p><strong>Початок:</strong> {{ formatDate(slot.startTime) }}</p>
             <p>
               <strong>Активний:</strong> {{ slot.isAvailable ? "Так" : "Ні" }}
             </p>
+            <p><strong>Кількість тон:</strong> {{ slot.tonCount }}</p>
+            <!-- Відображаємо кількість тон -->
             <button
               *ngIf="slot.isAvailable"
               class="ton-connect-button"
-              (click)="bookTimeSlot(slot)"
+              (click)="goToBookingPage(slot)"
             >
               Забронювати
             </button>
           </li>
         </ul>
       </div>
+
       <div *ngIf="timeSlots.length === 0" class="no-user-data">
         <p>Немає доступних слотів.</p>
       </div>
@@ -69,11 +58,14 @@
               <strong>Email:</strong> {{ booking.user.email }}
             </p>
             <p><strong>Статус:</strong> {{ booking.status }}</p>
-            <p><strong>Створено:</strong> {{ booking.createdAt }}</p>
-            <p><strong>Час:</strong> {{ booking.endTime }}</p>
+            <p>
+              <strong>Створено:</strong> {{ formatDate(booking.createdAt) }}
+            </p>
+            <p><strong>Час:</strong> {{ formatDate(booking.endTime) }}</p>
           </li>
         </ul>
       </div>
+
       <div *ngIf="bookings.length === 0" class="no-user-data">
         <p>Немає бронювань.</p>
       </div>

@@ -107,32 +107,35 @@ export class UserPageComponent implements OnInit {
       console.error('Chat ID is not defined');
       return;
     }
+  
+    // Використовуємо chatId для отримання даних користувача
     this.http.get<UserData>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`).subscribe(
       (data) => {
         if (data && !data.message) {
           this.userData = data; // Зберігаємо отримані дані користувача
           this.userForm.patchValue({ isTeacher: data.isTeacher }, { emitEvent: false }); // Set the checkbox value without emitting event
-          console.log('User Data:', data); // Log the entire user data
-          if (data.id) {
-            console.log('User ID:', data.id); // Log the user ID
-            this.fetchTimeSlotsByTeacherId(data.id); // Викликати метод тут з потрібним userId
+          console.log('User Data:', data);
+  
+          // Якщо користувач має ID, продовжуємо отримувати дані про час
+          if (data.telegramChatId) {
+            this.chatId = data.telegramChatId; // Зберігаємо chatId
+            this.fetchTimeSlotsByTeacherId(data.telegramChatId); // Викликаємо метод для отримання часів
           } else {
-            console.error('User ID is undefined');
+            console.error('Chat ID is undefined');
           }
-          this.userId = data.id; // Зберігаємо userId
-          this.http.get<any>(`http://localhost:5258/api/wallet/get-by-user-id?userId=${this.userData.id}`).subscribe(
+  
+          // Перевірка гаманця для цього користувача
+          this.http.get<any>(`http://localhost:5258/api/wallet/get-wallet-address-by-chat-id?chatId=${this.chatId}`).subscribe(
             (walletData) => {
               console.log('Fetched wallet data:', walletData);
-              if(walletData.walletAddress!== null){
+              if (walletData?.walletAddress) {
                 console.log('Wallet Address:', walletData.walletAddress);
-                this.isWalletConnected = true;
-              }
-               else{
-                console.log('Wallet Address is null');
+                this.walletAddress = walletData.walletAddress; // Зберігаємо адресу гаманця
+                this.isWalletConnected = true; // Встановлюємо статус підключення
+              } else {
+                this.walletAddress = null;
                 this.isWalletConnected = false;
-              } 
-           
-              //console.log(this.stydentPyblicKey) // Log the fetched wallet data
+              }
             },
             (error) => {
               console.error('Error fetching wallet data', error);
@@ -149,20 +152,18 @@ export class UserPageComponent implements OnInit {
       }
     );
   }
-
-  fetchTimeSlotsByTeacherId(userId: string): void {
+  fetchTimeSlotsByTeacherId(chatId: string): void {
     this.timeslotService.getAllTimeSlots().subscribe(
       (data) => {
         console.log('Fetched all time slots:', data); // Log all fetched data
-        console.log(userId); // Log the user ID
-        this.timeSlots = data.filter(slot => slot.userId === userId.toLowerCase()); // Filter and store matching timeslots
+        console.log('Filtering by chatId:', chatId); // Log the chatId
+        this.timeSlots = data.filter(slot => slot.userId === chatId); // Filter time slots by chatId
       },
       (error) => {
         console.error('Error fetching time slots', error);
       }
     );
   }
-
   submitUser(): void {
     if (this.userForm.valid && this.userData) {
       this.isSubmitting = true;
@@ -208,33 +209,32 @@ export class UserPageComponent implements OnInit {
   //   }
   // }
 
-  // saveWalletAddress() {
-  //   if (!this.walletAddress) {
-  //     alert('Гаманець не підключено.');
-  //     return;
-  //   }
-
-  //   const apiUrl = 'http://localhost:5258/api/wallet/set-by-user-id';
-  //   const payload = {
-      
-  //     userId: this.userId,
-  //     walletType: 'Phantom',
-  //     walletAddress: this.walletAddress,
-  //   };
-  //   console.log('Payload:', payload);
-
-  //   this.http.post(apiUrl, payload).subscribe({
-  //     next: (response) => {
-  //       console.log('Гаманець успішно збережено:', response);
-  //       alert('Гаманець успішно збережено!');
-  //     },
-  //     error: (error) => {
-  //       console.error('Помилка збереження гаманця:', error);
-  //       alert('Помилка збереження гаманця.');
-  //     },
-  //   });
-  // }
-
+  saveWalletAddress(walletAddress: string): void {
+    if (!walletAddress) {
+      console.error('Wallet Address is not available');
+      return;
+    }
+  
+    if (!this.chatId) {
+      console.error('Chat ID is not defined');
+      return;
+    }
+  
+    this.http.post('http://localhost:5258/api/wallet/set-wallet-address-by-chat-id', {
+      chatId: this.chatId,  // Використовуємо chatId для збереження
+      walletAddress: walletAddress
+    }).subscribe(
+      (response) => {
+        console.log('Wallet address saved successfully:', response);
+        alert('Wallet address successfully saved!');
+      },
+      (error) => {
+        console.error('Error saving wallet address:', error);
+        alert('Error saving wallet address.');
+      }
+    );
+  }
+  
 
   getLionEmojis(rating: number): string {
     return '🦁'.repeat(rating);

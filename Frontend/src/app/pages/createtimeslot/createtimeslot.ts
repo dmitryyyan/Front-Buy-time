@@ -1,30 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { TeacherService } from '../react-ton-connect/teacher.service';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
-import { MatInputModule } from '@angular/material/input'; // Import MatInputModule
-import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule
-import { MatCheckboxModule } from '@angular/material/checkbox'; // Import MatCheckboxModule
-import { MatCardModule } from '@angular/material/card'; // Import MatCardModule
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-add-timeslot',
-  standalone: true,
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatCardModule // Ensure MatCardModule is included
+  standalone: true,  // Вказуємо, що компонент є standalone
+  imports: [         // Імпортуємо необхідні модулі
+    CommonModule,    // Для *ngIf та *ngFor
+    FormsModule      // Для ngModel
   ],
   templateUrl: './createtimeslot.html',
-  styleUrls: ['./createtimeslot.css']
+  styleUrls: ['./createtimeslot.css'],
 })
 export class AddTimeslotComponent implements OnInit {
   chatId: string | null = null;
@@ -33,20 +22,28 @@ export class AddTimeslotComponent implements OnInit {
     userId: '',
     startTime: '',
     endTime: '',
-    isAvailable: false
+    isAvailable: false,
+    tonCount: 1, // Поле для кількості тон
   };
+
   selectedDate: string = '';
-  timeIntervals: string[] = [];
-  selectedIntervals: string[] = [];
+  selectedTimeSlot: string = ''; // Зберігаємо вибраний часовий слот
+  availableTimes: string[] = []; // Доступні часові слоти
+  selectedIntervals: string[] = []; // Зберігаємо вибрані інтервали
 
   message: string = '';
 
+  timeSlots = [
+    { label: '08:00 – 12:00', value: '08:00-12:00' },
+    { label: '12:00 – 16:00', value: '12:00-16:00' },
+    { label: '16:00 – 20:00', value: '16:00-20:00' },
+  ];
+
   constructor(
     private teacherService: TeacherService,
-    private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router // Inject HttpClient
-  ) { }
+    private router: Router
+  ) {}
 
   // Button methods
   button1Action() {
@@ -70,16 +67,18 @@ export class AddTimeslotComponent implements OnInit {
   }
 
   fetchChatId(): void {
-    this.http.get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId').subscribe(
-      (response) => {
-        this.chatId = response.chatId;
-        console.log('Chat ID:', this.chatId); // Log chatId to console
-        this.fetchUserData();
-      },
-      (error) => {
-        console.error('Error fetching chat ID', error);
-      }
-    );
+    this.http
+      .get<{ chatId: string }>('http://localhost:3000/api/getCurrentChatId')
+      .subscribe(
+        (response) => {
+          this.chatId = response.chatId;
+          console.log('Chat ID:', this.chatId);
+          this.fetchUserData();
+        },
+        (error) => {
+          console.error('Error fetching chat ID', error);
+        }
+      );
   }
 
   fetchUserData(): void {
@@ -87,24 +86,30 @@ export class AddTimeslotComponent implements OnInit {
       console.error('Chat ID is not defined');
       return;
     }
-    this.http.get<{ id: string }>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`).subscribe(
-      (data) => {
-        console.log('Fetched user data:', data); // Log the fetched data
-        if (data && data.id) {
-          this.timeSlotData.userId = data.id; // Set the userId
-          console.log('User ID:', data.id); // Log the user ID
-        } else {
-          console.error('User ID is undefined');
+    this.http
+      .get<{ id: string }>(`http://localhost:5258/api/user/get-by-chat-id?chatId=${this.chatId}`)
+      .subscribe(
+        (data) => {
+          console.log('Fetched user data:', data);
+          if (data && data.id) {
+            this.timeSlotData.userId = data.id;
+            console.log('User ID:', data.id);
+          } else {
+            console.error('User ID is undefined');
+          }
+        },
+        (error) => {
+          console.error('Error fetching user data', error);
         }
-      },
-      (error) => {
-        console.error('Error fetching user data', error);
-      }
-    );
+      );
   }
 
-  selectTimeSlot(startTime: string, endTime: string): void {
-    this.timeIntervals = this.generateTimeIntervals(startTime, endTime);
+  // Метод для вибору часових слотів
+  selectTimeSlot(timeSlot: string): void {
+    this.selectedTimeSlot = timeSlot;
+    // Генеруємо доступні інтервали для вибраного часового слоту
+    const [startTime, endTime] = timeSlot.split('-');
+    this.availableTimes = this.generateTimeIntervals(startTime, endTime);
   }
 
   generateTimeIntervals(startTime: string, endTime: string): string[] {
@@ -113,8 +118,8 @@ export class AddTimeslotComponent implements OnInit {
     const end = new Date(`1970-01-01T${endTime}:00`);
 
     while (start < end) {
-      const next = new Date(start.getTime() + 30 * 60000);
-      intervals.push(`${this.formatTime(start)} - ${this.formatTime(next)}`);
+      const next = new Date(start.getTime() + 60 * 60000); // Додаємо 1 годину
+      intervals.push(`${this.formatTime(start)} – ${this.formatTime(next)}`);
       start = next;
     }
 
@@ -125,60 +130,105 @@ export class AddTimeslotComponent implements OnInit {
     return date.toTimeString().slice(0, 5);
   }
 
+  // Метод для вибору інтервалу часу
   toggleIntervalSelection(interval: string): void {
     const index = this.selectedIntervals.indexOf(interval);
     if (index > -1) {
-      this.selectedIntervals.splice(index, 1);
+      this.selectedIntervals.splice(index, 1); // Видалення інтервалу
     } else {
-      this.selectedIntervals.push(interval);
+      this.selectedIntervals.push(interval); // Додавання інтервалу
     }
-  }
-
-  formatDateTime(date: string, time: string): string {
-    const dateTime = new Date(`${date}T${time}:00`);
-    dateTime.setHours(dateTime.getHours() + 2); // Adjust time by adding 2 hours
-    return dateTime.toISOString();
+    console.log('Selected intervals:', this.selectedIntervals); // Логування вибраних інтервалів
   }
 
   onSubmit(): void {
-    const timeSlots = this.selectedIntervals.map(interval => {
-      const [start, end] = interval.split(' - ');
-      return {
+    // Перевірка на вибір часу та дати
+    if (!this.selectedDate) {
+      this.message = 'Будь ласка, виберіть дату!';
+      return;
+    }
+
+    // Перевірка на вибір хоча б одного інтервалу
+    if (this.selectedIntervals.length === 0) {
+      this.message = 'Будь ласка, виберіть хоча б один слот!';
+      return;
+    }
+
+    // Перевірка на валідність тонів
+    if (isNaN(this.timeSlotData.tonCount) || this.timeSlotData.tonCount <= 0) {
+      this.message = 'Будь ласка, вкажіть правильну кількість тонів!';
+      return;
+    }
+
+    // Створюємо масив об'єктів для кожного вибраного інтервалу
+    const timeSlots = this.selectedIntervals.map((interval: string) => {
+      const [startTime, endTime] = interval.split(' – '); // Розділяємо час на початок та кінець
+      console.log('Selected Time:', interval);
+      console.log('Start Time:', startTime, 'End Time:', endTime);
+
+      // Тепер передаємо tonCount у запиті для кожного слоту
+      const slot = {
         userId: this.timeSlotData.userId,
-        startTime: this.formatDateTime(this.selectedDate, start),
-        endTime: this.formatDateTime(this.selectedDate, end),
+        startTime: this.formatDateTime(this.selectedDate, startTime),
+        endTime: this.formatDateTime(this.selectedDate, endTime),
+        tonCount: this.timeSlotData.tonCount, // Додаємо кількість тонів
         isAvailable: true
       };
+
+      console.log('Slot data being sent:', slot); // Перевірка, що дані передаються правильно
+      return slot;
     });
 
     let successCount = 0;
     let errorCount = 0;
+    let completedRequests = 0;
 
+    // Відправляємо кожен слот
     timeSlots.forEach(slot => {
-      console.log('Creating time slot:', slot); // Log the data being sent
+      console.log('Creating time slot:', slot); // Логування слоту
       this.teacherService.createTimeSlot(slot).subscribe(
         response => {
           console.log('Time slot created:', response);
-          this.message = 'Successfully created time slot';
-          successCount++;
-         // if (successCount + errorCount === timeSlots.length) {
-         //   this.showResultMessage(successCount, errorCount);
-         // }
+          successCount++; // Інкрементуємо лічильник успішних запитів
+          completedRequests++; // Інкрементуємо лічильник завершених запитів
+          if (completedRequests === timeSlots.length) {
+            this.showResultMessage(successCount, errorCount);
+          }
         },
         error => {
           console.error('Error creating time slot:', error);
-          errorCount++;
-          this.message = 'Error creating time slot';
-          //if (successCount + errorCount === timeSlots.length) {
-           // this.showResultMessage(successCount, errorCount);
-         // }
+          errorCount++; // Інкрементуємо лічильник помилок
+          completedRequests++; // Інкрементуємо лічильник завершених запитів
+          if (completedRequests === timeSlots.length) {
+            this.showResultMessage(successCount, errorCount);
+          }
         }
       );
     });
   }
 
+  // Функція для відображення результату після завершення всіх запитів
   showResultMessage(successCount: number, errorCount: number): void {
-    const message = `Successfully created ${successCount} time slots. ${errorCount} errors occurred.`;
-    alert(message); // Use alert instead of MatSnackBar
+    const message = `Успішно створено ${successCount} слотів. Сталася ${errorCount} помилка(ок).`;
+    alert(message); // Виводимо результат через alert
+  }
+
+  formatDateTime(date: string, time: string): string {
+    const dateTimeString = `${date}T${time}:00`;
+
+    if (!date || !time) {
+      console.error('Invalid date or time:', date, time);
+      return '';
+    }
+
+    const dateTime = new Date(dateTimeString);
+
+    if (isNaN(dateTime.getTime())) {
+      console.error('Invalid DateTime:', dateTimeString);
+      return '';
+    }
+
+    dateTime.setHours(dateTime.getHours() + 2); // Додаємо 2 години
+    return dateTime.toISOString();
   }
 }

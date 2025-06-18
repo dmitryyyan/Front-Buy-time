@@ -86,20 +86,14 @@ export class TeacherService {
   
   
   getTeacherWalletAddressByChatId(chatId: string): Observable<string> {
-    return this.http.get<any>(
-      'http://localhost:5258/api/wallet/get-wallet-address-by-chat-id?chatId=' + chatId
-    ).pipe(
-      map(response => response?.walletAddress ?? ''), // якщо response - об'єкт з walletAddress
+    return this.http.get<any>(`http://localhost:5258/api/wallet/get-wallet-address-by-chat-id?chatId=${chatId}`).pipe(
+      map(response => response?.walletAddress ?? ''),
       catchError(error => {
         console.error('Error fetching teacher wallet address by chatId', error);
-        if (error.status === 404) {
-          return throwError(() => new Error('Teacher wallet not found'));
-        }
-        return throwError(() => error);
+        return throwError(error);
       })
     );
   }
-  
   saveWalletAddressByChatId(chatId: string, walletAddress: string): Observable<any> {
     return this.http.post<any>(
       'http://localhost:5258/api/wallet/set-wallet-address-by-chat-id',

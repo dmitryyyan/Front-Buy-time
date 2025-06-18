@@ -14,21 +14,21 @@ export class TonConnectService {
       manifestUrl: 'https://dmitryyyan.github.io/ton-wallet-manifest/tonconnect-manifest.json',
     });
 
-    // Restore connection and save wallet
+    // Відновлення підключення до гаманця
     this._tonConnect.restoreConnection().then(() => {
       const wallet = this._tonConnect.wallet;
       if (wallet?.account?.address) {
         this.walletAddress = wallet.account.address;
-        this.saveWalletAddress(this.walletAddress);
+        this.saveWalletAddress(this.walletAddress); // Зберігаємо адресу гаманця
         console.log('🔄 Wallet restored:', this.walletAddress);
       }
     });
 
-    // Listen for wallet connection status changes and SAVE!
+    // Слухаємо зміни статусу підключення до гаманця
     this._tonConnect.onStatusChange((wallet: Wallet | null) => {
       if (wallet?.account?.address) {
         this.walletAddress = wallet.account.address;
-        this.saveWalletAddress(this.walletAddress);
+        this.saveWalletAddress(this.walletAddress); // Зберігаємо адресу гаманця
         console.log('🟢 Wallet connected:', this.walletAddress);
       } else {
         this.walletAddress = null;
@@ -37,18 +37,22 @@ export class TonConnectService {
     });
   }
 
+  // Отримуємо інстанс TonConnect для доступу до гаманця
   get tonConnectInstance(): TonConnect {
     return this._tonConnect;
   }
 
+  // Перевірка чи гаманець підключений
   isWalletConnected(): boolean {
     return !!this.walletAddress;
   }
 
+  // Отримання адреси гаманця
   getAddress(): string | null {
     return this.walletAddress;
   }
 
+  // Очікування підключення до гаманця
   async waitForWalletConnection(timeout = 10000): Promise<void> {
     const start = Date.now();
     while (!this.walletAddress && (Date.now() - start < timeout)) {
@@ -59,6 +63,7 @@ export class TonConnectService {
     }
   }
 
+  // Підключення до гаманця
   async connectWallet(): Promise<void> {
     await this._tonConnect.restoreConnection();
     if (!this.walletAddress) {
@@ -66,18 +71,15 @@ export class TonConnectService {
     }
   }
 
-  async sendTonToTeacher(chatId: string, amountTon: number): Promise<void> {
+  // Відправка транзакції
+  async sendTonToTeacher(chatId: string, amountTon: number, teacherWalletAddress: string): Promise<void> {
     try {
-      const teacherWalletAddress = await this.teacherService.getTeacherWalletAddressByChatId(chatId).toPromise();
-      if (!teacherWalletAddress) {
-        throw new Error('No wallet address for teacher');
-      }
-      const amountNano = BigInt(amountTon * 1e9).toString();
+      const amountNano = BigInt(amountTon * 1e9).toString(); // конвертуємо в нано-тон
       const tx = {
         validUntil: Math.floor(Date.now() / 1000) + 100,
         messages: [
           {
-            address: teacherWalletAddress,
+            address: teacherWalletAddress, // використовуємо передану адресу
             amount: amountNano,
           },
         ],
@@ -91,7 +93,7 @@ export class TonConnectService {
     }
   }
 
-  // SAVE wallet address in DB by chatId (from localStorage)
+  // Збереження адреси гаманця
   async saveWalletAddress(walletAddress: string): Promise<void> {
     try {
       if (!walletAddress) return;
@@ -107,11 +109,12 @@ export class TonConnectService {
     }
   }
 
+  // Отримуємо ChatId з localStorage
   getChatIdFromLocalStorage(): string | null {
     return localStorage.getItem('chatId');
   }
 
-  // Якщо треба зберегти вручну (наприклад, після специфічного flow)
+  // Якщо треба зберегти вручну
   async connectAndSaveTeacherWallet(chatId: string): Promise<void> {
     try {
       await this._tonConnect.restoreConnection();

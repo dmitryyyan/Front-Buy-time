@@ -16,7 +16,7 @@ bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const username = msg.from.username;
 
-  const webAppUrl = 'https://cf19-37-57-114-38.ngrok-free.app '; // Твій Angular WebApp, https
+  const webAppUrl = 'https://8240-46-211-27-226.ngrok-free.app '; // Твій Angular WebApp, https
 
   const keyboard = {
     inline_keyboard: [

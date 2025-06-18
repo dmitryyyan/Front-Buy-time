@@ -1,19 +1,7 @@
-<!-- Fonts & Icons -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  rel="stylesheet"
-/>
-
 <body>
   <div class="wrapper">
     <div class="page-container">
-      <h1 class="section-title">Створити слот часу</h1>
+      <h1 class="section-title">Створити погодинну консультацію</h1>
 
       <form (ngSubmit)="onSubmit()" class="glass-form">
         <div class="form-group">
@@ -29,44 +17,56 @@
           />
         </div>
 
+        <!-- Кнопки вибору часу -->
         <div class="form-group">
-          <label><i class="fas fa-clock"></i> Оберіть проміжок часу:</label>
+          <label><i class="fas fa-clock"></i> Оберіть час:</label>
           <div class="time-buttons">
-            <button type="button" (click)="selectTimeSlot('08:00', '12:00')">
-              08:00 – 12:00
-            </button>
-            <button type="button" (click)="selectTimeSlot('12:00', '16:00')">
-              12:00 – 16:00
-            </button>
-            <button type="button" (click)="selectTimeSlot('16:00', '20:00')">
-              16:00 – 20:00
+            <button
+              type="button"
+              *ngFor="let slot of timeSlots"
+              (click)="selectTimeSlot(slot.value)"
+              class="time-slot-button"
+            >
+              {{ slot.label }}
             </button>
           </div>
         </div>
 
-        <div class="form-group" *ngIf="timeIntervals.length > 0">
-          <label>
-            <i class="fas fa-hourglass-half"></i> Оберіть інтервали (по 30 хв):
-          </label>
-          <div class="interval-checkboxes">
-            <label
-              *ngFor="let interval of timeIntervals"
-              class="checkbox-label"
-            >
+        <!-- Вибір точного часу -->
+        <div *ngIf="availableTimes.length > 0" class="form-group">
+          <label><i class="fas fa-clock"></i> Оберіть точний час:</label>
+          <div class="time-buttons">
+            <label *ngFor="let time of availableTimes">
               <input
-                type="checkbox"
-                [value]="interval"
-                (change)="toggleIntervalSelection(interval)"
+                type="radio"
+                name="timeSlot"
+                [value]="time"
+                [(ngModel)]="selectedTimeSlot"
+                class="time-radio-button"
               />
-              {{ interval }}
+              {{ time }}
             </label>
           </div>
         </div>
 
+        <!-- У формі для створення слоту -->
+        <div class="form-group">
+          <label for="tonCount">Кількість тонів:</label>
+          <input
+            type="number"
+            id="tonCount"
+            [(ngModel)]="timeSlotData.tonCount"
+            name="tonCount"
+            min="1"
+            required
+          />
+        </div>
+        <!-- Кнопка підтвердження -->
         <button type="submit" class="ton-connect-button">
           <i class="fas fa-plus-circle"></i> Створити
         </button>
 
+        <!-- Успішне повідомлення -->
         <div *ngIf="message" class="alert-success">
           <i class="fas fa-check-circle"></i> {{ message }}
         </div>
@@ -74,7 +74,7 @@
     </div>
   </div>
 
-  <!-- Навігаційна панель -->
+  <!-- Нижня навігація -->
   <div class="bottom-nav">
     <button (click)="button1Action()">
       <i class="fas fa-search"></i><span>Пошук</span>

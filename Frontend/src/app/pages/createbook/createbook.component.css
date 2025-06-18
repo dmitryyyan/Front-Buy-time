@@ -188,6 +188,32 @@ textarea {
   line-height: 1;
 }
 
+
+.ton-info-container {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  /* Трохи прозорий фон */
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.ton-info-text {
+  margin: 0;
+  font-size: 16px;
+  color: #ffffff;
+  /* Білий текст */
+  font-weight: 500;
+}
+
+.ton-info-text i {
+  margin-left: 8px;
+  font-size: 16px;
+  /* Розмір іконки */
+  color: #93c5fd;
+  /* Легкий синій для іконки */
+}
 @media (max-width: 480px) {
   .bottom-nav {
     height: 76px;
