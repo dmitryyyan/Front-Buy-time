@@ -135,26 +135,33 @@ export class CreatebookComponent implements OnInit {
     }
   
     try {
-      this.message = '⏳ Підключення до гаманця...';
+      this.message = '⏳ Підключення до гаманця... Підключіть гаманець в профілі';
       await this.tonConnectService.waitForWalletConnection();
   
-      this.message = '📤 Підготовка до оплати...';
+      this.message = '\nВідкриваємо TON Space для оплати. Підтвердьте платіж у своєму гаманці.';
   
       const amount = slot.tonCount || 0.05;
       const comment = `Бронювання уроку ${slot.id}`;
   
-      // Показуємо все в консолі всередині sendTonToTeacher
-      await this.tonConnectService.sendTonToTeacher(
-        amount,
-        comment
-      );
+      // Тепер тут обробляємо повернутий link
+      const result = await this.tonConnectService.sendTonToTeacher(amount, comment);
+  
+      if (result?.link) {
+        // В Telegram WebApp — ПРАВИЛЬНО використовувати window.location.href!
+        window.location.href = result.link;
+        // Не використовуй window.open!
+        // Можеш також показати підказку якщо треба:
+        this.message = "Відкриваємо гаманець...";
+        return; // Далі не чекаємо на updateTimeSlot — зроби після підтвердження вручну!
+      }
+  
+      // Якщо не було лінка, працюємо як раніше (наприклад, у десктоп браузері)
       await this.teacherService.updateTimeSlot({
         ...slot,
-        isAvailable: false // або інший прапорець
+        isAvailable: false
       }).toPromise();
-      // Можна також показати повідомлення в інтерфейсі:
-      this.message = `✅ Оплата успішно ініційована на адресу: ${DEFAULT_RESERVE_WALLET}`;
   
+      this.message = `✅ Оплата успішно ініційована на адресу: ${DEFAULT_RESERVE_WALLET}`;
     } catch (error: any) {
       this.message = '❌ Сталася помилка при оплаті або букінгу.';
       console.error(error);

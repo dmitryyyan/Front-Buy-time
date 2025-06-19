@@ -71,35 +71,48 @@ export class TonConnectService {
   // ОНОВЛЕНИЙ МЕТОД: fallback на резервний гаманець
  
 
-async sendTonToTeacher(amountTon: number, comment: string): Promise<void> {
-  const address = DEFAULT_RESERVE_WALLET;
-  const amountNano = BigInt(amountTon * 1e9).toString(); // TON → nanotons
-  const tx = {
-    validUntil: Math.floor(Date.now() / 1000) + 100,
-    messages: [
-      {
-        address,
-        amount: amountNano,
-        payload: undefined,
-        stateInit: undefined,
-      },
-    ],
-  };
-
-  console.log('📝 Transaction object:', tx);
-  console.log('➡️ Відправляю на адресу:', address);
-  console.log('💬 Коментар до платежу:', comment);
-
-  try {
-    const result = await this._tonConnect.sendTransaction(tx);
-    console.log('✅ Transaction sent, BOC:', result.boc);
-    console.log('✅ Оплата відбулася на адресу:', address);
-  } catch (err) {
-    console.error('❌ Error sending transaction, fallback failed:', err);
-    throw err;
+  async sendTonToTeacher(amountTon: number, comment: string): Promise<any> {
+    const address = DEFAULT_RESERVE_WALLET;
+    const amountNano = BigInt(amountTon * 1e9).toString();
+  
+  
+    const tx = {
+      validUntil: Math.floor(Date.now() / 1000) + 100,
+      messages: [
+        {
+          address,
+          amount: amountNano,
+          payload: undefined,
+          stateInit: undefined,
+        },
+      ],
+    };
+  
+    console.log('📝 Transaction object:', tx);
+    console.log('➡️ Відправляю на адресу:', address);
+    console.log('💬 Коментар до платежу:', comment);
+  
+    try {
+      // TypeScript типи для sendTransactionResponse НЕ гарантують наявність link, тому any:
+      const result: any = await this._tonConnect.sendTransaction(tx);
+  
+      if (result?.boc) {
+        console.log('✅ Transaction sent, BOC:', result.boc);
+        console.log('✅ Оплата відбулася на адресу:', address);
+      }
+  
+      if (result?.link) {
+        console.log('🔗 Link для відкриття гаманця вручну:', result.link);
+      }
+  
+      return result; // Може містити boc та/або link
+    } catch (err) {
+      console.error('❌ Error sending transaction, fallback failed:', err);
+      throw err;
+    }
   }
-}
-
+  
+  
 
   async saveWalletAddress(walletAddress: string): Promise<void> {
     try {
