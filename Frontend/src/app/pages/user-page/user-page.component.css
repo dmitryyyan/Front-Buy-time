@@ -24,9 +24,11 @@ body {
   min-height: 100vh;
   box-sizing: border-box;
   padding-top: 10px;
-  padding-bottom: 10px;
-  /* точно дорівнює height нижньої навігації */
+  padding-bottom: 80px;
+  /* дорівнює height нижньої навігації */
+  width: 100vw;
 }
+
 /* Контент */
 .page-container {
   flex: 1;
@@ -42,11 +44,15 @@ body {
   backdrop-filter: blur(14px);
 }
 
-.page-container h1 {
+.page-container h1,
+.section-title {
   text-align: center;
   font-size: clamp(20px, 4vw, 28px);
   color: #93c5fd;
   margin-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 8px #3b82f611;
 }
 
 /* Стиль кнопки TON */
@@ -101,6 +107,23 @@ body {
   margin-left: 28px;
   font-size: clamp(12px, 2.5vw, 14px);
   color: #94a3b8;
+}
+
+input,
+select,
+textarea {
+  background: #232e43;
+  color: #e5e9f1;
+  border: 1.5px solid rgba(59, 130, 246, 0.08);
+  border-radius: 9px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #60a5fa;
+  background: #1e293b;
 }
 
 /* Кнопки */
@@ -207,6 +230,8 @@ body {
     padding: 10px 12px;
   }
 }
+
+/* User card/profile додатково */
 .user-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);

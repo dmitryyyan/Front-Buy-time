@@ -1,124 +1,133 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
-/* Уніфікований шрифт */
+/* Reset */
 * {
   font-family: 'Montserrat', sans-serif !important;
   box-sizing: border-box;
 }
 
-/* Глобальне оформлення */
+/* Body bg */
 html,
 body {
-  margin: 0;
-  padding: 0;
   height: 100%;
-  width: 100%;
-  font-family: 'Montserrat', sans-serif;
+  overflow: hidden !important;
   background: rgba(15, 23, 42, 0.95);
   color: #cbd5e1;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* Wrapper — весь екран */
-.wrapper {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(15, 23, 42, 0.95);
-}
-
-/* Контейнер форми */
-.page-container {
+/* Main glass container */
+.add-timeslot-container {
   width: 100%;
   max-width: 420px;
-  background: rgba(30, 41, 59, 0.8);
-  padding: 24px;
+  margin: 40px auto;
+  padding: 30px 26px 18px 26px;
+  background: rgba(30, 41, 59, 0.82);
   border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.54);
   backdrop-filter: blur(14px);
   display: flex;
   flex-direction: column;
+  gap: 18px;
 }
 
-/* Заголовок */
-h1 {
+/* Title */
+.add-timeslot-container h2 {
   text-align: center;
   font-size: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
   color: #93c5fd;
   font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
-/* Форма */
-.glass-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
+/* Form group */
 .form-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: 13px;
 }
 
 label {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
   color: #cbd5e1;
+  margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="email"] {
+/* Date input */
+input[type="date"] {
   padding: 10px 14px;
   border-radius: 12px;
   border: none;
-  background: rgba(15, 23, 42, 0.2);
+  background: rgba(15, 23, 42, 0.19);
   color: #f1f5f9;
-  font-size: 14px;
+  font-size: 15px;
+  transition: background 0.2s;
 }
 
-input:focus {
+input[type="date"]:focus {
   outline: none;
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(15, 23, 42, 0.33);
 }
 
-/* Стилізація чекбокса */
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Time slot buttons */
+.form-group button[type="button"] {
+  margin-right: 9px;
+  margin-bottom: 5px;
+  margin-top: 2px;
+  background: linear-gradient(90deg, #2563eb 50%, #60a5fa 100%);
+  color: #f1f5f9;
+  border: none;
+  border-radius: 13px;
+  padding: 9px 22px;
   font-size: 14px;
   font-weight: 600;
-  color: #cbd5e1;
-  margin-top: 8px;
   cursor: pointer;
+  transition: background 0.23s, transform 0.14s;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.13);
+  outline: none;
 }
 
-input[type="checkbox"] {
+.form-group button[type="button"]:hover,
+.form-group button[type="button"].active {
+  background: linear-gradient(90deg, #3b82f6 60%, #93c5fd 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.03);
+}
+
+.form-group>div {
+  margin-top: 3px;
+}
+
+/* Checkbox intervals */
+.form-group input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
   border: 2px solid #3b82f6;
   border-radius: 4px;
-  background-color: rgba(15, 23, 42, 0.4);
-  display: flex;
+  background: rgba(15, 23, 42, 0.4);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  margin-right: 8px;
+  vertical-align: middle;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.19s;
+  position: relative;
+  top: 2px;
 }
 
-input[type="checkbox"]:checked {
-  background-color: #3b82f6;
+.form-group input[type="checkbox"]:checked {
+  background: #3b82f6;
   border-color: #3b82f6;
 }
 
-input[type="checkbox"]:checked::after {
+.form-group input[type="checkbox"]:checked::after {
   content: '';
   width: 5px;
   height: 10px;
@@ -126,32 +135,81 @@ input[type="checkbox"]:checked::after {
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   display: block;
+  margin-left: 5px;
 }
 
-/* Кнопка */
-.ton-connect-button {
+/* Submit */
+.submit-button {
   background: linear-gradient(90deg, #2563eb, #60a5fa);
   color: white;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 600;
+  padding: 13px 0;
+  font-size: 16px;
+  font-weight: 700;
   border: none;
   border-radius: 24px;
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
-  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.23);
+  transition: background 0.23s, transform 0.14s;
   margin-top: 8px;
 }
 
-.ton-connect-button:hover {
+.submit-button:hover {
   background: linear-gradient(90deg, #3b82f6, #93c5fd);
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
 }
 
-/* Повідомлення */
-.info-message {
-  margin-top: 12px;
+/* Message */
+.message-box {
+  margin-top: 16px;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   color: #60a5fa;
+  background: rgba(30, 41, 59, 0.65);
+  border-radius: 11px;
+  padding: 8px 0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 6px #2d4568a3;
+}
+
+/* Нижній контейнер іконок */
+.button-container1 {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.button-container1 button {
+  background: rgba(30, 41, 59, 0.88);
+  border: none;
+  border-radius: 50%;
+  padding: 10px 12px;
+  font-size: 20px;
+  color: #60a5fa;
+  box-shadow: 0 1px 6px #181f2b4b;
+  cursor: pointer;
+  transition: background 0.15s, color 0.17s, transform 0.13s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.button-container1 button:hover {
+  background: #3b82f6;
+  color: #fff;
+  transform: scale(1.11) translateY(-1.5px);
+}
+
+/* Для мобільної адаптивності */
+@media (max-width: 600px) {
+  .add-timeslot-container {
+    max-width: 96vw;
+    padding: 12px;
+  }
+
+  .button-container1 {
+    gap: 6px;
+  }
 }

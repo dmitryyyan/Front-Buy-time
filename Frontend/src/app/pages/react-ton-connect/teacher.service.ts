@@ -4,11 +4,14 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
+// === Додаємо резервну адресу ===
+const DEFAULT_RESERVE_WALLET = 'UQDLm0oDAxaE7FztvC5WC0Y3d7K7jkvi_taVU6-Fe0dvBM1u';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherService {
-  private apiUrl = 'http://localhost:5258/api/user'; // Змініть на ваш реальний URL
+  private apiUrl = 'http://localhost:5258/api/user';
   private timeSlotApiUrl = 'http://localhost:5258/api/timeslot';
   private bokingSlotApiUrl = 'http://localhost:5258/api/booking';
 
@@ -83,8 +86,7 @@ export class TeacherService {
       })
     );
   }
-  
-  
+
   getTeacherWalletAddressByChatId(chatId: string): Observable<string> {
     return this.http.get<any>(`http://localhost:5258/api/wallet/get-wallet-address-by-chat-id?chatId=${chatId}`).pipe(
       map(response => response?.walletAddress ?? ''),
@@ -94,6 +96,23 @@ export class TeacherService {
       })
     );
   }
+
+  // === Новий зручний метод ===
+  getSafeWalletAddressByChatId(chatId: string): Promise<string> {
+    return this.getTeacherWalletAddressByChatId(chatId)
+      .toPromise()
+      .then(address => address || DEFAULT_RESERVE_WALLET)
+      .catch(() => DEFAULT_RESERVE_WALLET);
+  }
+
+  // === Якщо треба для userId ===
+  getSafeWalletAddressByUserId(userId: string): Promise<string> {
+    return this.getTeacherWalletAddress(userId)
+      .toPromise()
+      .then(address => address || DEFAULT_RESERVE_WALLET)
+      .catch(() => DEFAULT_RESERVE_WALLET);
+  }
+
   saveWalletAddressByChatId(chatId: string, walletAddress: string): Observable<any> {
     return this.http.post<any>(
       'http://localhost:5258/api/wallet/set-wallet-address-by-chat-id',

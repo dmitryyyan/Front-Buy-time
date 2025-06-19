@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { TonConnectUIProvider, TonConnectButton } from '@tonconnect/ui-react';
 import { TonConnectService } from './ton-connect.service'; // Імпортуємо ваш сервіс для роботи з гаманцем
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-react-ton-connect',
@@ -15,7 +16,8 @@ export class ReactTonConnectComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private elRef: ElementRef,
-    private tonConnectService: TonConnectService // Ін'єкція сервісу для роботи з гаманцем
+    private tonConnectService: TonConnectService,
+    private router: Router // Ін'єкція сервісу для роботи з гаманцем
   ) {}
 
   ngAfterViewInit() {
@@ -43,7 +45,7 @@ export class ReactTonConnectComponent implements AfterViewInit, OnDestroy {
   }
 
   goBack() {
-    // Перехід назад
+    this.router.navigate(['/user-page']);
   }
 
   // Метод для перезапису адреси гаманця
@@ -63,4 +65,5 @@ export class ReactTonConnectComponent implements AfterViewInit, OnDestroy {
       alert("Адреса гаманця не знайдена.");
     }
   }
+  
 }

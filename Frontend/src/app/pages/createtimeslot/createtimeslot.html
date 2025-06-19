@@ -1,92 +1,83 @@
-<body>
-  <div class="wrapper">
-    <div class="page-container">
-      <h1 class="section-title">Створити погодинну консультацію</h1>
+<!-- Fonts & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  rel="stylesheet"
+/>
 
-      <form (ngSubmit)="onSubmit()" class="glass-form">
-        <div class="form-group">
-          <label for="date">
-            <i class="fas fa-calendar-alt"></i> Оберіть дату:
+<div class="wrapper">
+  <div class="page-container" role="main" aria-label="Створення таймслоту">
+    <h1 class="section-title">Створення слота часу</h1>
+
+    <form class="glass-form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="date">Оберіть дату:</label>
+        <input
+          type="date"
+          id="date"
+          [(ngModel)]="selectedDate"
+          name="date"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-clock"></i> Оберіть часовий діапазон:</label>
+        <div class="time-buttons">
+          <button
+            type="button"
+            *ngFor="let slot of timeSlots; trackBy: trackByValue"
+            (click)="selectTimeSlot(slot.value)"
+            [ngClass]="{ 'time-slot-button': true, 'selected': selectedSlot === slot.value }"
+          >
+            {{ slot.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="timeIntervals.length > 0">
+        <label>Оберіть 30-хв інтервали:</label>
+        <div class="button-group">
+          <label *ngFor="let interval of timeIntervals" class="checkbox-item">
+            <input
+              type="checkbox"
+              [value]="interval"
+              (change)="toggleIntervalSelection(interval)"
+            />
+            {{ interval }}
           </label>
-          <input
-            type="date"
-            id="date"
-            [(ngModel)]="selectedDate"
-            name="date"
-            required
-          />
         </div>
+      </div>
 
-        <!-- Кнопки вибору часу -->
-        <div class="form-group">
-          <label><i class="fas fa-clock"></i> Оберіть час:</label>
-          <div class="time-buttons">
-            <button
-              type="button"
-              *ngFor="let slot of timeSlots"
-              (click)="selectTimeSlot(slot.value)"
-              class="time-slot-button"
-            >
-              {{ slot.label }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Вибір точного часу -->
-        <div *ngIf="availableTimes.length > 0" class="form-group">
-          <label><i class="fas fa-clock"></i> Оберіть точний час:</label>
-          <div class="time-buttons">
-            <label *ngFor="let time of availableTimes">
-              <input
-                type="radio"
-                name="timeSlot"
-                [value]="time"
-                [(ngModel)]="selectedTimeSlot"
-                class="time-radio-button"
-              />
-              {{ time }}
-            </label>
-          </div>
-        </div>
-
-        <!-- У формі для створення слоту -->
-        <div class="form-group">
-          <label for="tonCount">Кількість тонів:</label>
-          <input
-            type="number"
-            id="tonCount"
-            [(ngModel)]="timeSlotData.tonCount"
-            name="tonCount"
-            min="1"
-            required
-          />
-        </div>
-        <!-- Кнопка підтвердження -->
+      <div class="ton-button-wrapper">
         <button type="submit" class="ton-connect-button">
-          <i class="fas fa-plus-circle"></i> Створити
+          <i class="fas fa-check"></i> Створити слот
         </button>
+      </div>
 
-        <!-- Успішне повідомлення -->
-        <div *ngIf="message" class="alert-success">
-          <i class="fas fa-check-circle"></i> {{ message }}
-        </div>
-      </form>
-    </div>
+      <div *ngIf="message" class="no-user-data message-white">
+        {{ message }}
+      </div>
+    </form>
   </div>
+</div>
 
-  <!-- Нижня навігація -->
-  <div class="bottom-nav">
-    <button (click)="button1Action()">
-      <i class="fas fa-search"></i><span>Пошук</span>
-    </button>
-    <button (click)="button2Action()">
-      <i class="fas fa-calendar-alt"></i><span>Забронювати</span>
-    </button>
-    <button (click)="button3Action()">
-      <i class="fas fa-cog"></i><span>Запис</span>
-    </button>
-    <button (click)="navigateToUserPage()">
-      <i class="fas fa-user"></i><span>Профіль</span>
-    </button>
-  </div>
-</body>
+<div class="bottom-nav" aria-label="Навігаційна панель">
+  <button (click)="button1Action()">
+    <i class="fas fa-search"></i><span>Пошук</span>
+  </button>
+  <button (click)="button2Action()">
+    <i class="fas fa-calendar-alt"></i><span>Створити</span>
+  </button>
+  <button (click)="button3Action()">
+    <i class="fas fa-cog"></i><span>Забронювати</span>
+  </button>
+  <button (click)="navigateToUserPage()">
+    <i class="fas fa-user"></i><span>Профіль</span>
+  </button>
+</div>
